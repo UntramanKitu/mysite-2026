@@ -1,0 +1,935 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solo Leveling: Arise - Official Action RPG Landing Page</title>
+    <link rel="stylesheet" href="{% static 'css/game_style.css' %}">
+</head>
+
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="header-container">
+            <a href="#" class="logo-link">
+                <span class="logo-text">SOLO LEVELING</span>
+        </div>
+        <ul class="nav-menu">
+            <li><a href="#hero" class="nav-link">Home</a></li>
+            <li><a href="#pre-register" class="nav-link">Pre-Register</a></li>
+            <li><a href="#hunters" class="nav-link">Hunters</a></li>
+            <li><a href="#system" class="nav-link">System Menu</a></li>
+            <li><a href="#media" class="nav-link">Media</a></li>
+        </ul>
+        <div>
+            <a href="#pre-register" class="btn-glowing" style="text-align: right;">Arise Now</a>
+        </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="hero" class="hero-section">
+        <div class="hero-bg-overlay"></div>
+        <div class="hero-glow-orb"></div>
+        <div class="hero-content">
+            <div class="hero-subtitle">The World's First Action RPG</div>
+            <h1 class="hero-title">
+                Solo Leveling
+                <span>ARISE</span>
+            </h1>
+            <p class="hero-description">
+                Awaken your inner strength. Command the shadow army, defeat the rulers of the dungeons, and ascend to
+                become the ultimate Hunter.
+            </p>
+            <div class="hero-actions">
+                <a href="#pre-register" class="btn-glowing">Pre-Register Now</a>
+                <a href="#system" class="btn-secondary-glowing">Enter System Console</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pre-Registration / Reward Milestones -->
+    <section id="pre-register" style="background-color: var(--color-bg-dark); padding: 5rem 1rem;">
+        <div class="section-container" style="padding: 0;">
+            <div class="section-header">
+                <div class="section-subtitle">PRE-REGISTRATION CAMPAIGN</div>
+                <h2 class="section-title">GLOBAL MILESTONES</h2>
+                <div class="section-divider"></div>
+            </div>
+
+            <div class="milestones-container">
+                <div class="milestones-title">Current Awakeners: 12,480,952 / 15,000,000</div>
+                <div class="progress-track">
+                    <div class="progress-fill" style="width: 83%"></div>
+
+                    <!-- Milestone Node 1 -->
+                    <div class="progress-node active" style="left: 20%">
+                        <div class="node-label">1M</div>
+                        <div class="node-reward">200k Gold</div>
+                    </div>
+
+                    <!-- Milestone Node 2 -->
+                    <div class="progress-node active" style="left: 40%">
+                        <div class="node-label">5M</div>
+                        <div class="node-reward">Mana Crystals x50</div>
+                    </div>
+
+                    <!-- Milestone Node 3 -->
+                    <div class="progress-node active" style="left: 60%">
+                        <div class="node-label">10M</div>
+                        <div class="node-reward">Legendary Gear Set</div>
+                    </div>
+
+                    <!-- Milestone Node 4 -->
+                    <div class="progress-node active" style="left: 80%">
+                        <div class="node-label">12M</div>
+                        <div class="node-reward">Sung Jinwoo Black Suit</div>
+                    </div>
+
+                    <!-- Milestone Node 5 -->
+                    <div class="progress-node" style="left: 100%">
+                        <div class="node-label">15M</div>
+                        <div class="node-reward">S-Rank Hunter Ticket</div>
+                    </div>
+                </div>
+                <div style="text-align: center; margin-top: 2.5rem;">
+                    <p style="color: var(--color-text-muted); font-size: 0.9rem; margin-bottom: 1rem;">Choose your
+                        platform to pre-register and claim rewards instantly on launch day:</p>
+                    <div style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;">
+                        <button class="btn-secondary-glowing"
+                            style="padding: 0.5rem 1.2rem; font-size: 0.75rem; border-color: rgba(255,255,255,0.2)">
+                            App Store</button>
+                        <button class="btn-secondary-glowing"
+                            style="padding: 0.5rem 1.2rem; font-size: 0.75rem; border-color: rgba(255,255,255,0.2)">🤖
+                            Google Play</button>
+                        <button class="btn-secondary-glowing"
+                            style="padding: 0.5rem 1.2rem; font-size: 0.75rem; border-color: rgba(255,255,255,0.2)">💻
+                            Windows PC</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Hunters Section -->
+    <section id="hunters" class="section-container">
+        <div class="section-header">
+            <div class="section-subtitle">THE MONARCH & ASSOC. HUNTERS</div>
+            <h2 class="section-title">HUNTER DATABASE</h2>
+            <div class="section-divider"></div>
+        </div>
+
+        <div class="hunter-showcase-grid">
+            <!-- Left Side: Interactive Hunter List -->
+            <div class="hunter-list" id="hunterList">
+                <!-- Jinwoo -->
+                <div class="hunter-item active" data-hunter="jinwoo">
+                    <div class="hunter-avatar-thumb">
+                        <svg viewBox="0 0 100 100" width="36" height="36" style="fill: var(--color-primary);">
+                            <path d="M50 15L20 40H35V80H65V40H80L50 15Z" />
+                        </svg>
+                    </div>
+                    <div class="hunter-meta">
+                        <div class="hunter-name-list">Sung Jinwoo</div>
+                        <div class="hunter-rank-badge">RANK S</div>
+                    </div>
+                </div>
+                <!-- Hae-In -->
+                <div class="hunter-item" data-hunter="haein">
+                    <div class="hunter-avatar-thumb">
+                        <svg viewBox="0 0 100 100" width="36" height="36" style="fill: var(--color-accent);">
+                            <path d="M50 10L10 80H90L50 10Z" />
+                        </svg>
+                    </div>
+                    <div class="hunter-meta">
+                        <div class="hunter-name-list">Cha Hae-In</div>
+                        <div class="hunter-rank-badge">RANK S</div>
+                    </div>
+                </div>
+                <!-- Jong-In -->
+                <div class="hunter-item" data-hunter="jongin">
+                    <div class="hunter-avatar-thumb">
+                        <svg viewBox="0 0 100 100" width="36" height="36" style="fill: #ff4500;">
+                            <circle cx="50" cy="50" r="35" />
+                        </svg>
+                    </div>
+                    <div class="hunter-meta">
+                        <div class="hunter-name-list">Choi Jong-In</div>
+                        <div class="hunter-rank-badge">RANK S</div>
+                    </div>
+                </div>
+                <!-- Yoonho -->
+                <div class="hunter-item" data-hunter="yoonho">
+                    <div class="hunter-avatar-thumb">
+                        <svg viewBox="0 0 100 100" width="36" height="36" style="fill: #32cd32;">
+                            <rect x="20" y="20" width="60" height="60" />
+                        </svg>
+                    </div>
+                    <div class="hunter-meta">
+                        <div class="hunter-name-list">Baek Yoonho</div>
+                        <div class="hunter-rank-badge">RANK S</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Side: Hunter Display Cards -->
+            <div class="hunter-detail-display" id="hunterDetailDisplay">
+                <!-- Graphic Preview -->
+                <div class="hunter-graphic-side">
+                    <div class="hunter-magic-circle" id="magicCircle"></div>
+                    <div class="hunter-graphic-display" id="graphicDisplay">
+                        <!-- Dynamic SVG art representing active hunter -->
+                        <svg viewBox="0 0 400 400" width="320" height="320" id="hunterSvg">
+                            <!-- Background glow paths -->
+                            <defs>
+                                <radialGradient id="purpleGlow" cx="50%" cy="50%" r="50%">
+                                    <stop offset="0%" stop-color="#bd00ff" stop-opacity="0.6" />
+                                    <stop offset="100%" stop-color="#000" stop-opacity="0" />
+                                </radialGradient>
+                            </defs>
+                            <circle cx="200" cy="200" r="180" fill="url(#purpleGlow)" />
+                            <!-- Abstract glowing twin daggers for Jinwoo -->
+                            <path d="M140 320 L160 220 L180 230 L140 320 Z" fill="#00f0ff"
+                                filter="drop-shadow(0 0 8px #00f0ff)" />
+                            <path d="M260 320 L240 220 L220 230 L260 320 Z" fill="#bd00ff"
+                                filter="drop-shadow(0 0 8px #bd00ff)" />
+                            <!-- Aura arcs -->
+                            <path d="M120 180 Q200 120 280 180" fill="none" stroke="#00f0ff" stroke-width="4"
+                                stroke-dasharray="10, 5" />
+                            <path d="M90 140 Q200 60 310 140" fill="none" stroke="#bd00ff" stroke-width="2" />
+                            <!-- Floating magic glyphs -->
+                            <circle cx="200" cy="110" r="10" fill="none" stroke="#fff" stroke-width="2" />
+                            <line x1="200" y1="100" x2="200" y2="120" stroke="#fff" stroke-width="2" />
+                            <line x1="190" y1="110" x2="210" y2="110" stroke="#fff" stroke-width="2" />
+                        </svg>
+                    </div>
+                </div>
+
+                <!-- Text & Stats Info -->
+                <div class="hunter-info-side">
+                    <div class="hunter-rank-header">
+                        <span class="hunter-rank-label" id="hunterRank">S-Rank</span>
+                        <span class="hunter-type-badge" id="hunterType">Shadow Monarch / Fighter</span>
+                    </div>
+                    <h2 class="hunter-main-name" id="hunterName">Sung Jinwoo</h2>
+                    <p class="hunter-desc" id="hunterDesc">
+                        The Weakest Hunter of All Mankind who overcame a near-death encounter in a double dungeon to
+                        obtain a mysterious RPG System interface, enabling him to level up without limit.
+                    </p>
+
+                    <!-- RPG Stats Panel -->
+                    <div class="hunter-stats-panel">
+                        <div class="stat-row">
+                            <div class="stat-info">
+                                <span class="stat-label">STRENGTH (STR)</span>
+                                <span class="stat-value" id="valStr">99 / 99</span>
+                            </div>
+                            <div class="stat-bar-outer">
+                                <div class="stat-bar-inner" id="barStr" style="width: 100%;"></div>
+                            </div>
+                        </div>
+                        <div class="stat-row">
+                            <div class="stat-info">
+                                <span class="stat-label">AGILITY (AGI)</span>
+                                <span class="stat-value" id="valAgi">95 / 99</span>
+                            </div>
+                            <div class="stat-bar-outer">
+                                <div class="stat-bar-inner" id="barAgi" style="width: 96%;"></div>
+                            </div>
+                        </div>
+                        <div class="stat-row">
+                            <div class="stat-info">
+                                <span class="stat-label">INTELLIGENCE (INT)</span>
+                                <span class="stat-value" id="valInt">90 / 99</span>
+                            </div>
+                            <div class="stat-bar-outer">
+                                <div class="stat-bar-inner" id="barInt" style="width: 91%;"></div>
+                            </div>
+                        </div>
+                        <div class="stat-row">
+                            <div class="stat-info">
+                                <span class="stat-label">DEFENSE / VITALITY (VIT)</span>
+                                <span class="stat-value" id="valVit">92 / 99</span>
+                            </div>
+                            <div class="stat-bar-outer">
+                                <div class="stat-bar-inner" id="barVit" style="width: 93%;"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Skills Showcase -->
+                    <div class="hunter-skills-section">
+                        <div class="skills-title">Active Class Skills</div>
+                        <div class="skills-list" id="skillsContainer">
+                            <div class="skill-slot active"
+                                data-skill-desc="Shadow Extraction: Extracts shadows from fallen enemies to add them to your shadow army.">
+                                <svg viewBox="0 0 100 100">
+                                    <circle cx="50" cy="50" r="30" fill="none" stroke="currentColor" stroke-width="4" />
+                                    <path d="M40 50 L50 40 L60 50 L50 60 Z" />
+                                </svg>
+                                <span class="skill-tooltip">Shadow Extraction</span>
+                            </div>
+                            <div class="skill-slot"
+                                data-skill-desc="Mutilate: Slashes target enemies rapidly dealing colossal physical damage.">
+                                <svg viewBox="0 0 100 100">
+                                    <line x1="25" y1="75" x2="75" y2="25" stroke="currentColor" stroke-width="5" />
+                                    <line x1="35" y1="65" x2="65" y2="35" stroke="currentColor" stroke-width="3" />
+                                </svg>
+                                <span class="skill-tooltip">Mutilate</span>
+                            </div>
+                        </div>
+                        <div id="skillDescText"
+                            style="font-size: 0.8rem; color: var(--color-text-muted); margin-top: 1rem; min-height: 40px; padding: 0.5rem; background: rgba(0,0,0,0.2); border-radius: 4px;">
+                            Shadow Extraction: Extracts shadows from fallen enemies to add them to your shadow army.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- System Interface Simulator Section -->
+    <section id="system" style="background-color: var(--color-bg-dark); padding: 5rem 1rem;">
+        <div class="section-container" style="padding: 0;">
+            <div class="section-header">
+                <div class="section-subtitle">THE EXCLUSIVE SYSTEM INTERFACE</div>
+                <h2 class="section-title">SYSTEM LEVEL UP SIMULATOR</h2>
+                <div class="section-divider"></div>
+            </div>
+
+            <div class="simulator-layout">
+                <!-- Left: RPG System Window -->
+                <div class="system-window">
+                    <div class="system-window-header">
+                        <div class="system-window-title">SYSTEM STATUS</div>
+                        <div class="system-status">ACTIVE</div>
+                    </div>
+                    <div class="system-window-body">
+                        <!-- Profile Header -->
+                        <div class="system-profile">
+                            <div class="profile-item">
+                                <span class="profile-label">NAME</span>
+                                <span class="profile-value">SUNG JINWOO</span>
+                            </div>
+                            <div class="profile-item">
+                                <span class="profile-label">LEVEL</span>
+                                <span class="profile-value highlight-gold" id="playerLevel"
+                                    style="text-shadow: 0 0 10px rgba(255, 183, 0, 0.4);">01</span>
+                            </div>
+                            <div class="profile-item">
+                                <span class="profile-label">CLASS</span>
+                                <span class="profile-value" style="color: var(--color-primary);">SHADOW MONARCH</span>
+                            </div>
+                        </div>
+
+                        <!-- Stats controls -->
+                        <div class="stats-grid">
+                            <!-- Strength -->
+                            <div class="stat-control-row">
+                                <span class="control-label">STRENGTH</span>
+                                <span class="control-val" id="simStr">10</span>
+                                <div class="control-bar-outer">
+                                    <div class="control-bar-inner" id="simBarStr" style="width: 10%"></div>
+                                </div>
+                                <div class="control-btn-group">
+                                    <button class="control-btn" onclick="adjustStat('str', -1)">-</button>
+                                    <button class="control-btn" onclick="adjustStat('str', 1)">+</button>
+                                </div>
+                            </div>
+                            <!-- Agility -->
+                            <div class="stat-control-row">
+                                <span class="control-label">AGILITY</span>
+                                <span class="control-val" id="simAgi">10</span>
+                                <div class="control-bar-outer">
+                                    <div class="control-bar-inner" id="simBarAgi" style="width: 10%"></div>
+                                </div>
+                                <div class="control-btn-group">
+                                    <button class="control-btn" onclick="adjustStat('agi', -1)">-</button>
+                                    <button class="control-btn" onclick="adjustStat('agi', 1)">+</button>
+                                </div>
+                            </div>
+                            <!-- Vitality -->
+                            <div class="stat-control-row">
+                                <span class="control-label">VITALITY</span>
+                                <span class="control-val" id="simVit">10</span>
+                                <div class="control-bar-outer">
+                                    <div class="control-bar-inner" id="simBarVit" style="width: 10%"></div>
+                                </div>
+                                <div class="control-btn-group">
+                                    <button class="control-btn" onclick="adjustStat('vit', -1)">-</button>
+                                    <button class="control-btn" onclick="adjustStat('vit', 1)">+</button>
+                                </div>
+                            </div>
+                            <!-- Intelligence -->
+                            <div class="stat-control-row">
+                                <span class="control-label">INTELLIGENCE</span>
+                                <span class="control-val" id="simInt">10</span>
+                                <div class="control-bar-outer">
+                                    <div class="control-bar-inner" id="simBarInt" style="width: 10%"></div>
+                                </div>
+                                <div class="control-btn-group">
+                                    <button class="control-btn" onclick="adjustStat('int', -1)">-</button>
+                                    <button class="control-btn" onclick="adjustStat('int', 1)">+</button>
+                                </div>
+                            </div>
+                            <!-- Sense -->
+                            <div class="stat-control-row">
+                                <span class="control-label">SENSE</span>
+                                <span class="control-val" id="simSen">10</span>
+                                <div class="control-bar-outer">
+                                    <div class="control-bar-inner" id="simBarSen" style="width: 10%"></div>
+                                </div>
+                                <div class="control-btn-group">
+                                    <button class="control-btn" onclick="adjustStat('sen', -1)">-</button>
+                                    <button class="control-btn" onclick="adjustStat('sen', 1)">+</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Points counter -->
+                        <div class="points-display">
+                            <span class="points-label">AVAILABLE STAT POINTS</span>
+                            <span class="points-val" id="availablePoints">10</span>
+                        </div>
+
+                        <!-- Action buttons -->
+                        <button class="btn-system-action" onclick="triggerLevelUp()">SYSTEM LEVEL UP</button>
+
+                        <div class="fx-config-bar">
+                            <label class="fx-checkbox-label">
+                                <input type="checkbox" id="chkSound" checked> Enable Sound FX
+                            </label>
+                            <label class="fx-checkbox-label">
+                                <input type="checkbox" id="chkAuto" checked> Auto Scroll Log
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right: Simulated System Console Log Output -->
+                <div class="system-console-wrapper">
+                    <div
+                        style="font-family: var(--font-heading); font-size: 0.8rem; margin-bottom: 0.8rem; color: var(--color-primary); letter-spacing: 2px;">
+                        REAL-TIME SYSTEM LOG</div>
+                    <div class="console-panel" id="consoleLog">
+                        <div class="console-log-entry"><span class="sys-prefix">[SYSTEM]:</span> Initializing exclusive
+                            hunter interface...</div>
+                        <div class="console-log-entry"><span class="sys-prefix">[SYSTEM]:</span> Connecting to Awakener
+                            Sung Jinwoo's neurological pathways...</div>
+                        <div class="console-log-entry system-alert"><span class="sys-prefix">[SYSTEM]:</span>
+                            Synchronized. Level 1 database accessed successfully. Allocating 10 stat points.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Media Showcase Section -->
+    <section id="media" class="section-container">
+        <div class="section-header">
+            <div class="section-subtitle">CINEMATIC VIDEOS & TRAILERS</div>
+            <h2 class="section-title">MEDIA FILES</h2>
+            <div class="section-divider"></div>
+        </div>
+
+        <div class="media-grid">
+            <!-- Media item 1 -->
+            <div class="media-card" onclick="playMockVideo('Official Teaser Trailer')">
+                <div class="media-thumbnail-wrapper">
+                    <svg viewBox="0 0 100 100">
+                        <rect x="0" y="0" width="100" height="100" fill="#0b0d19" />
+                        <polygon points="40,30 70,50 40,70" fill="rgba(255,255,255,0.05)" />
+                        <!-- Grid decorative rings -->
+                        <circle cx="50" cy="50" r="30" fill="none" stroke="rgba(0, 240, 255, 0.08)" stroke-width="1" />
+                    </svg>
+                    <div class="media-play-icon">
+                        <svg viewBox="0 0 24 24">
+                            <polygon points="8,5 19,12 8,19" />
+                        </svg>
+                    </div>
+                </div>
+                <div class="media-details">
+                    <div class="media-type">Teaser</div>
+                    <div class="media-title">Official Launch Cinematic Trailer</div>
+                </div>
+            </div>
+
+            <!-- Media item 2 -->
+            <div class="media-card" onclick="playMockVideo('Gameplay Overview Showcase')">
+                <div class="media-thumbnail-wrapper">
+                    <svg viewBox="0 0 100 100">
+                        <rect x="0" y="0" width="100" height="100" fill="#0b0d19" />
+                        <polygon points="40,30 70,50 40,70" fill="rgba(255,255,255,0.05)" />
+                        <circle cx="50" cy="50" r="35" fill="none" stroke="rgba(189, 0, 255, 0.08)" stroke-width="1" />
+                    </svg>
+                    <div class="media-play-icon">
+                        <svg viewBox="0 0 24 24">
+                            <polygon points="8,5 19,12 8,19" />
+                        </svg>
+                    </div>
+                </div>
+                <div class="media-details">
+                    <div class="media-type">Gameplay</div>
+                    <div class="media-title">S-Rank Hunter Combat Mechanics Showcase</div>
+                </div>
+            </div>
+
+            <!-- Media item 3 -->
+            <div class="media-card" onclick="playMockVideo('Developer Update & Interview')">
+                <div class="media-thumbnail-wrapper">
+                    <svg viewBox="0 0 100 100">
+                        <rect x="0" y="0" width="100" height="100" fill="#0b0d19" />
+                        <polygon points="40,30 70,50 40,70" fill="rgba(255,255,255,0.05)" />
+                        <circle cx="50" cy="50" r="25" fill="none" stroke="rgba(255, 215, 0, 0.08)" stroke-width="1" />
+                    </svg>
+                    <div class="media-play-icon">
+                        <svg viewBox="0 0 24 24">
+                            <polygon points="8,5 19,12 8,19" />
+                        </svg>
+                    </div>
+                </div>
+                <div class="media-details">
+                    <div class="media-type">Interview</div>
+                    <div class="media-title">Solo Leveling: Arise - Developer Roadmap Interview</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-top">
+                <div class="footer-logo-column">
+                    <span class="logo-text">SOLO LEVELING</span>
+                    <p class="footer-desc">
+                        Official promotional fan portal. All trademark rights, imagery, and intellectual assets for Solo
+                        Leveling belong to Chugong, DUBU (Redice Studio), Webtoon, and Netmarble Games.
+                    </p>
+                </div>
+                <div class="footer-links-grid">
+                    <div>
+                        <h4 class="footer-column-title">Game Info</h4>
+                        <ul class="footer-links-list">
+                            <li><a href="#hunters" class="footer-link">Hunters List</a></li>
+                            <li><a href="#system" class="footer-link">System Panel</a></li>
+                            <li><a href="#media" class="footer-link">Trailers</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="footer-column-title">Support</h4>
+                        <ul class="footer-links-list">
+                            <li><a href="#" class="footer-link">FAQ</a></li>
+                            <li><a href="#" class="footer-link">Community</a></li>
+                            <li><a href="#" class="footer-link">System Requirements</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <div>© 2026 Netmarble Neo / Kakao Entertainment. All Rights Reserved. Custom Webpage by Antigravity.
+                </div>
+                <div class="footer-bottom-links">
+                    <a href="#" class="footer-link">Privacy Policy</a>
+                    <a href="#" class="footer-link">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript logic -->
+    <script>
+        // --- Web Audio Sound Synthesizer ---
+        let audioCtx = null;
+
+        function playSound(type) {
+            if (!document.getElementById('chkSound').checked) return;
+
+            try {
+                if (!audioCtx) {
+                    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                }
+
+                if (audioCtx.state === 'suspended') {
+                    audioCtx.resume();
+                }
+
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+
+                if (type === 'click') {
+                    // Soft synth click sound
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(600, audioCtx.currentTime);
+                    osc.frequency.exponentialRampToValueAtTime(100, audioCtx.currentTime + 0.1);
+                    gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.1);
+                } else if (type === 'levelup') {
+                    // High-quality S-rank gaming chime
+                    const t = audioCtx.currentTime;
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(523.25, t); // C5
+                    osc.frequency.setValueAtTime(783.99, t + 0.08); // G5
+                    osc.frequency.setValueAtTime(1046.50, t + 0.16); // C6
+
+                    gain.gain.setValueAtTime(0.12, t);
+                    gain.gain.linearRampToValueAtTime(0.12, t + 0.2);
+                    gain.gain.exponentialRampToValueAtTime(0.001, t + 0.45);
+
+                    osc.start();
+                    osc.stop(t + 0.5);
+                } else if (type === 'alert') {
+                    // Futuristic beep sound
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(120, audioCtx.currentTime);
+                    osc.frequency.setValueAtTime(180, audioCtx.currentTime + 0.05);
+                    gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.15);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.15);
+                }
+            } catch (err) {
+                console.warn("Audio Context failed to launch or run: ", err);
+            }
+        }
+
+        // --- Hunter Database Swapper ---
+        const hunterData = {
+            jinwoo: {
+                name: "Sung Jinwoo",
+                rank: "S-Rank (Monarch)",
+                type: "Shadow Monarch / Fighter",
+                desc: "The Weakest Hunter of All Mankind who overcame a near-death encounter in a double dungeon to obtain a mysterious RPG System interface, enabling him to level up without limit and lead the Shadow Army.",
+                stats: { str: 100, agi: 96, int: 91, vit: 93 },
+                skills: [
+                    { name: "Shadow Extraction", desc: "Extracts shadows from fallen enemies to add them to your shadow army." },
+                    { name: "Mutilate", desc: "Slashes target enemies rapidly dealing colossal physical damage." }
+                ],
+                svgMarkup: `
+                    <circle cx="200" cy="200" r="180" fill="url(#purpleGlow)" />
+                    <path d="M140 320 L160 220 L180 230 L140 320 Z" fill="#00f0ff" filter="drop-shadow(0 0 8px #00f0ff)" />
+                    <path d="M260 320 L240 220 L220 230 L260 320 Z" fill="#bd00ff" filter="drop-shadow(0 0 8px #bd00ff)" />
+                    <path d="M120 180 Q200 120 280 180" fill="none" stroke="#00f0ff" stroke-width="4" stroke-dasharray="10, 5" />
+                    <path d="M90 140 Q200 60 310 140" fill="none" stroke="#bd00ff" stroke-width="2" />
+                    <circle cx="200" cy="110" r="10" fill="none" stroke="#fff" stroke-width="2" />
+                    <line x1="200" y1="100" x2="200" y2="120" stroke="#fff" stroke-width="2" />
+                `
+            },
+            haein: {
+                name: "Cha Hae-In",
+                rank: "S-Rank (Fighter)",
+                type: "Sword Master / Vice-Master",
+                desc: "The Vice-Guildmaster of the Hunters Guild. She senses mana via smell and uses incredibly elegant, lightning-fast sword styles that overwhelm magic beasts instantly.",
+                stats: { str: 86, agi: 93, int: 61, vit: 79 },
+                skills: [
+                    { name: "Sword Dance", desc: "Performs an agile sequence of strikes, dodging incoming attacks automatically." },
+                    { name: "Sword of Light", desc: "Charges her blade with radiant energy, releasing a shockwave that blinds enemies." }
+                ],
+                svgMarkup: `
+                    <radialGradient id="goldGlow" cx="50%" cy="50%" r="50%">
+                        <stop offset="0%" stop-color="#ffd700" stop-opacity="0.5"/>
+                        <stop offset="100%" stop-color="#000" stop-opacity="0"/>
+                    </radialGradient>
+                    <circle cx="200" cy="200" r="180" fill="url(#goldGlow)" />
+                    <!-- Sword SVG mockup -->
+                    <path d="M195 350 L205 350 L205 130 L215 130 L200 80 L185 130 L195 130 Z" fill="#ffffff" filter="drop-shadow(0 0 8px #ffd700)" />
+                    <circle cx="200" cy="180" r="50" fill="none" stroke="#ffd700" stroke-width="3" />
+                    <path d="M150 180 L250 180" stroke="#ffd700" stroke-width="2" />
+                    <!-- Spark particles -->
+                    <circle cx="120" cy="130" r="3" fill="#fff" />
+                    <circle cx="280" cy="150" r="4" fill="#ffd700" />
+                `
+            },
+            jongin: {
+                name: "Choi Jong-In",
+                rank: "S-Rank (Mage)",
+                type: "Flame Overlord / Guild Leader",
+                desc: "The Guildmaster of the Hunters Guild, known as 'The Ultimate Soldier'. He excels in colossal destructive fire magic capable of reducing entire dungeon chambers to ashes.",
+                stats: { str: 51, agi: 66, int: 99, vit: 71 },
+                skills: [
+                    { name: "Celestial Dragon Fire", desc: "Summons an ancient blazing fire dragon that tracks and incinerates targets." },
+                    { name: "Fire Wall", desc: "Erects a towering wall of flames reflecting damage back to the attackers." }
+                ],
+                svgMarkup: `
+                    <radialGradient id="redGlow" cx="50%" cy="50%" r="50%">
+                        <stop offset="0%" stop-color="#ff4500" stop-opacity="0.6"/>
+                        <stop offset="100%" stop-color="#000" stop-opacity="0"/>
+                    </radialGradient>
+                    <circle cx="200" cy="200" r="180" fill="url(#redGlow)" />
+                    <!-- Flame portal shapes -->
+                    <path d="M150 250 C150 150, 200 100, 200 100 C200 100, 250 150, 250 250 C250 300, 200 320, 200 320 C200 320, 150 300, 150 250 Z" fill="#ff4500" filter="drop-shadow(0 0 10px #ff8c00)" />
+                    <path d="M170 240 C170 170, 200 130, 200 130 C200 130, 230 170, 230 240 C230 280, 200 290, 200 290 C200 290, 170 280, 170 240 Z" fill="#ffd700" />
+                    <!-- Magic circle runes -->
+                    <circle cx="200" cy="200" r="130" fill="none" stroke="#ff4500" stroke-width="2" stroke-dasharray="15, 8" />
+                `
+            },
+            yoonho: {
+                name: "Baek Yoonho",
+                rank: "S-Rank (Fighter)",
+                type: "White Tiger / Guild Leader",
+                desc: "The Guildmaster of the White Tiger Guild. He possesses a unique transformation skill allowing him to mutate into a fierce white tiger beast, dramatically boosting raw muscle power.",
+                stats: { str: 93, agi: 81, int: 51, vit: 96 },
+                skills: [
+                    { name: "White Tiger Claw", desc: "Imbues hands with lightning-fast beast energy, tearing armor with ease." },
+                    { name: "Beast Power", desc: "Roars loudly, boosting combat speed and attack power by 50% for 20 seconds." }
+                ],
+                svgMarkup: `
+                    <radialGradient id="greenGlow" cx="50%" cy="50%" r="50%">
+                        <stop offset="0%" stop-color="#32cd32" stop-opacity="0.5"/>
+                        <stop offset="100%" stop-color="#000" stop-opacity="0"/>
+                    </radialGradient>
+                    <circle cx="200" cy="200" r="180" fill="url(#greenGlow)" />
+                    <!-- Beast slash shapes -->
+                    <path d="M120 120 Q180 200 100 280" fill="none" stroke="#32cd32" stroke-width="8" stroke-linecap="round" filter="drop-shadow(0 0 8px #00ff00)" />
+                    <path d="M200 100 Q260 200 180 300" fill="none" stroke="#32cd32" stroke-width="8" stroke-linecap="round" filter="drop-shadow(0 0 8px #00ff00)" />
+                    <path d="M280 120 Q340 200 260 280" fill="none" stroke="#32cd32" stroke-width="8" stroke-linecap="round" filter="drop-shadow(0 0 8px #00ff00)" />
+                    <!-- Wild sparks -->
+                    <circle cx="150" cy="160" r="3" fill="#fff" />
+                    <circle cx="240" cy="240" r="3.5" fill="#fff" />
+                `
+            }
+        };
+
+        const hunterItems = document.querySelectorAll('.hunter-item');
+        const hunterNameEl = document.getElementById('hunterName');
+        const hunterRankEl = document.getElementById('hunterRank');
+        const hunterTypeEl = document.getElementById('hunterType');
+        const hunterDescEl = document.getElementById('hunterDesc');
+        const barStr = document.getElementById('barStr');
+        const barAgi = document.getElementById('barAgi');
+        const barInt = document.getElementById('barInt');
+        const barVit = document.getElementById('barVit');
+        const valStr = document.getElementById('valStr');
+        const valAgi = document.getElementById('valAgi');
+        const valInt = document.getElementById('valInt');
+        const valVit = document.getElementById('valVit');
+        const skillsContainer = document.getElementById('skillsContainer');
+        const skillDescText = document.getElementById('skillDescText');
+        const hunterSvg = document.getElementById('hunterSvg');
+        const magicCircle = document.getElementById('magicCircle');
+
+        hunterItems.forEach(item => {
+            item.addEventListener('click', () => {
+                const key = item.getAttribute('data-hunter');
+                const data = hunterData[key];
+                if (!data) return;
+
+                // Play soft click sound
+                playSound('click');
+
+                // Toggle active classes
+                hunterItems.forEach(i => i.classList.remove('active'));
+                item.classList.add('active');
+
+                // Update text details
+                hunterNameEl.innerText = data.name;
+                hunterRankEl.innerText = data.rank;
+                hunterTypeEl.innerText = data.type;
+                hunterDescEl.innerText = data.desc;
+
+                // Update stats progress bars
+                barStr.style.width = data.stats.str + '%';
+                barAgi.style.width = data.stats.agi + '%';
+                barInt.style.width = data.stats.int + '%';
+                barVit.style.width = data.stats.vit + '%';
+
+                valStr.innerText = data.stats.str + ' / 99';
+                valAgi.innerText = data.stats.agi + ' / 99';
+                valInt.innerText = data.stats.int + ' / 99';
+                valVit.innerText = data.stats.vit + ' / 99';
+
+                // Change magic circle color scheme
+                if (key === 'jinwoo') {
+                    magicCircle.style.borderColor = 'rgba(0, 240, 255, 0.3)';
+                    magicCircle.style.animation = 'pulseGlow 4s infinite linear';
+                } else if (key === 'haein') {
+                    magicCircle.style.borderColor = 'rgba(255, 215, 0, 0.3)';
+                    magicCircle.style.animation = 'pulseGlow 4s infinite linear';
+                } else if (key === 'jongin') {
+                    magicCircle.style.borderColor = 'rgba(255, 69, 0, 0.3)';
+                    magicCircle.style.animation = 'pulseGlowPurple 4s infinite linear';
+                } else if (key === 'yoonho') {
+                    magicCircle.style.borderColor = 'rgba(50, 205, 50, 0.3)';
+                    magicCircle.style.animation = 'pulseGlow 4s infinite linear';
+                }
+
+                // Render dynamic SVG graphics
+                hunterSvg.innerHTML = `
+                    <defs>
+                        <radialGradient id="purpleGlow" cx="50%" cy="50%" r="50%">
+                            <stop offset="0%" stop-color="#bd00ff" stop-opacity="0.6"/>
+                            <stop offset="100%" stop-color="#000" stop-opacity="0"/>
+                        </radialGradient>
+                    </defs>
+                    ${data.svgMarkup}
+                `;
+
+                // Render Skills slots
+                skillsContainer.innerHTML = '';
+                data.skills.forEach((skill, idx) => {
+                    const slot = document.createElement('div');
+                    slot.className = `skill-slot ${idx === 0 ? 'active' : ''}`;
+                    slot.setAttribute('data-skill-desc', skill.name + ': ' + skill.desc);
+
+                    let iconSvg = '';
+                    if (idx === 0) {
+                        iconSvg = `
+                            <svg viewBox="0 0 100 100">
+                                <circle cx="50" cy="50" r="30" fill="none" stroke="currentColor" stroke-width="4"/>
+                                <path d="M40 50 L50 40 L60 50 L50 60 Z"/>
+                            </svg>
+                        `;
+                    } else {
+                        iconSvg = `
+                            <svg viewBox="0 0 100 100">
+                                <line x1="25" y1="75" x2="75" y2="25" stroke="currentColor" stroke-width="5"/>
+                                <line x1="35" y1="65" x2="65" y2="35" stroke="currentColor" stroke-width="3"/>
+                            </svg>
+                        `;
+                    }
+                    slot.innerHTML = `
+                        ${iconSvg}
+                        <span class="skill-tooltip">${skill.name}</span>
+                    `;
+
+                    slot.addEventListener('click', () => {
+                        playSound('click');
+                        document.querySelectorAll('.skill-slot').forEach(s => s.classList.remove('active'));
+                        slot.classList.add('active');
+                        skillDescText.innerText = slot.getAttribute('data-skill-desc');
+                    });
+
+                    skillsContainer.appendChild(slot);
+                });
+
+                // Reset default skill text description
+                skillDescText.innerText = data.skills[0].name + ': ' + data.skills[0].desc;
+            });
+        });
+
+
+        // --- RPG Level Up Simulator ---
+        let currentLvl = 1;
+        let statPoints = 10;
+        let playerStats = {
+            str: 10,
+            agi: 10,
+            vit: 10,
+            int: 10,
+            sen: 10
+        };
+        let originalStats = { ...playerStats };
+
+        const elLvl = document.getElementById('playerLevel');
+        const elPoints = document.getElementById('availablePoints');
+        const elConsole = document.getElementById('consoleLog');
+
+        function writeToConsole(msg, extraClass = '') {
+            const entry = document.createElement('div');
+            entry.className = `console-log-entry ${extraClass}`;
+            entry.innerHTML = `<span class="sys-prefix">[SYSTEM]:</span> ${msg}`;
+            elConsole.appendChild(entry);
+
+            // Auto scroll console log
+            if (document.getElementById('chkAuto').checked) {
+                elConsole.scrollTop = elConsole.scrollHeight;
+            }
+        }
+
+        function updateSimDisplay() {
+            elPoints.innerText = statPoints;
+            elLvl.innerText = currentLvl.toString().padStart(2, '0');
+
+            for (const [stat, val] of Object.entries(playerStats)) {
+                const upperStat = stat.charAt(0).toUpperCase() + stat.slice(1);
+                document.getElementById(`sim${upperStat}`).innerText = val;
+
+                // Calculate percentage based on initial base stat of 10
+                const percent = Math.min(100, (val / 50) * 100);
+                document.getElementById(`simBar${upperStat}`).style.width = percent + '%';
+            }
+        }
+
+        function adjustStat(stat, amount) {
+            if (amount > 0) {
+                if (statPoints > 0) {
+                    playerStats[stat] += 1;
+                    statPoints -= 1;
+                    playSound('click');
+                    writeToConsole(`Allocated 1 stat point to ${stat.toUpperCase()}. (${stat.toUpperCase()}: ${playerStats[stat]})`);
+                } else {
+                    playSound('alert');
+                    writeToConsole(`<span style="color:red">ERROR: Insufficient stat points. Level up to obtain more points.</span>`);
+                }
+            } else {
+                // Cannot go below the stat value at the beginning of the level
+                if (playerStats[stat] > originalStats[stat]) {
+                    playerStats[stat] -= 1;
+                    statPoints += 1;
+                    playSound('click');
+                    writeToConsole(`Refunded 1 stat point from ${stat.toUpperCase()}.`);
+                } else {
+                    playSound('alert');
+                    writeToConsole(`<span style="color:red">ERROR: Cannot refund beyond the level base stat limit.</span>`);
+                }
+            }
+            updateSimDisplay();
+        }
+
+        function triggerLevelUp() {
+            currentLvl += 1;
+            statPoints += 5;
+
+            // Retain stat progression as base for new levels
+            originalStats = { ...playerStats };
+
+            // Flash level animation
+            elLvl.style.animation = 'none';
+            setTimeout(() => {
+                elLvl.style.animation = 'float 1s ease-in-out';
+            }, 10);
+
+            // Play system leveling chime
+            playSound('levelup');
+
+            writeToConsole(`★ LEVEL UP! You have achieved Level ${currentLvl}.`, 'system-level-up');
+            writeToConsole(`5 additional Stat Points have been allocated. Available points: ${statPoints}.`);
+
+            // Add standard gaming easter egg random alerts
+            const warnings = [
+                "WARNING: High magical power signature detected nearby.",
+                "ALERT: A dimensional C-Rank Dungeon Gate is opening in your coordinates.",
+                "NOTIFICATION: You have unlocked S-Rank Shadow Skill: 'Arise'.",
+                "ALERT: Daily quest incomplete. Warning scenario will initiate in 5 seconds unless you complete daily routines."
+            ];
+
+            if (currentLvl % 2 === 0) {
+                const randomWarning = warnings[Math.floor(Math.random() * warnings.length)];
+                setTimeout(() => {
+                    playSound('alert');
+                    writeToConsole(`<span style="color:#ffd700; font-weight:800;">[NOTIFICATION]: ${randomWarning}</span>`, 'system-alert');
+                }, 1000);
+            }
+
+            updateSimDisplay();
+        }
+
+        // Run initial configuration render
+        updateSimDisplay();
+
+        // --- Mock Video Player Event ---
+        function playMockVideo(title) {
+            playSound('levelup');
+            alert(`[System]: Opening video player for "${title}" - Pre-register now to unlock cinematic clips!`);
+        }
+    </script>
+</body>
+
+</html>

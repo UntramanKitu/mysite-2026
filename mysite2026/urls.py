@@ -14,9 +14,11 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from asgiref import current_thread_executor
 from django.http import HttpResponse
 from django.contrib import admin
 from django.urls import path
+from django.shortcuts import render
 
 def info(request):
     ip_address = request.META['REMOTE_ADDR']
@@ -25,9 +27,16 @@ def info(request):
     for k,v in request.headers.items():
         res_txt += f"<p> {k}:{v}<p>\n"
     return HttpResponse(res_txt)
-    return HttpResponse("<h1>DKaaar Django Arjarn Wichit SuudHooooood!!!<h1>")
+
+def home(request):
+    return render(request, "index.html")
+
+def old_home(request):
+    return render(request, "home.html")
 
 urlpatterns = [
+    path('', old_home),
+    path('solo/', home),
     path('info/', info),
     path('admin/', admin.site.urls),
 ]
