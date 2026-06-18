@@ -1,10 +1,15 @@
 # Mysite (18/06/2026)
 
-# คำสั่งที่ใช้
-UV run manage.py runserver
+# Command
+- UV run manage.py runserver
+- UV run python manage.py runserver
 
 # Http methods
-GET, POST, PUT, DELETE, PATCH
+- GET
+- POST
+- PUT
+- DELETE
+- PATCH
 
 # Http Status
 - Pass 2xx Success 
@@ -24,3 +29,6 @@ GET, POST, PUT, DELETE, PATCH
 - 502 Bad Gateway เซิร์ฟเวอร์ต้นทางได้รับคำตอบที่ผิดพลาด
 - 503 Service Unavailable เซิร์ฟเวอร์ปิดปรับปรุงชั่วคราว
 - 504 Gateway Timeout หมดเวลาเชื่อมต่อ 
+
+# HTTP SuudTraaaa
+
