@@ -4,6 +4,16 @@
 - UV run manage.py runserver
 - UV run python manage.py runserver
 
+# Command Git
+- git config --global user.name "UntramanKitu"
+- git config --global user.email "[EMAIL_ADDRESS]"
+- git init 
+- git add .
+- git commit -m "add project"
+- git branch -M main
+- git remote add origin [EMAIL_ADDRESS]:"
+- git push -u origin main
+
 # Http methods
 - GET
 - POST
