@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 
@@ -9,7 +10,7 @@
 
 <body style="background-color: black; color: azure; text-align: center;">
     <h1 style="font-size: 100px; text-align: center; color: #b70c0cff;">Arjarn Wichit SuudHoooddd!!! </h1>
-    <img src="cat.jpg">
+    <img src="{% static 'Funy.jpg' %}">
 
     <p>IP Address :{{request.META.REMOTE_ADDR}}</p>
     <p>User Agent :{{request.META.HTTP_USER_AGENT}}</p>
