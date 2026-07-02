@@ -1,0 +1,198 @@
+{% extends 'chopee/base.html' %}
+{% load static %}
+
+{% block title %}คำสั่งซื้อของฉัน - Chopee{% endblock %}
+
+{% block extra_css %}
+<style>
+    .orders-list {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    
+    .order-item {
+        padding: 20px;
+        border-bottom: 1px solid #eee;
+        cursor: pointer;
+        transition: background 0.3s;
+    }
+    
+    .order-item:hover {
+        background: #f9f9f9;
+    }
+    
+    .order-item:last-child {
+        border-bottom: none;
+    }
+    
+    .order-header {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr 150px;
+        gap: 15px;
+        margin-bottom: 15px;
+        align-items: center;
+    }
+    
+    .order-number {
+        font-weight: bold;
+        color: #333;
+        font-size: 14px;
+    }
+    
+    .order-date {
+        font-size: 12px;
+        color: #999;
+    }
+    
+    .order-price {
+        font-size: 14px;
+        font-weight: bold;
+        color: #ee4d2b;
+    }
+    
+    .order-status {
+        display: inline-block;
+        padding: 6px 12px;
+        border-radius: 4px;
+        font-size: 12px;
+        font-weight: bold;
+        text-align: center;
+    }
+    
+    .order-status.pending {
+        background: #fff3e0;
+        color: #f57f17;
+    }
+    
+    .order-status.paid {
+        background: #e3f2fd;
+        color: #1976d2;
+    }
+    
+    .order-status.shipping {
+        background: #f3e5f5;
+        color: #7b1fa2;
+    }
+    
+    .order-status.delivered {
+        background: #e8f5e9;
+        color: #2e7d32;
+    }
+    
+    .order-status.cancelled {
+        background: #ffebee;
+        color: #c62828;
+    }
+    
+    .order-items {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 10px;
+    }
+    
+    .order-item-image {
+        width: 60px;
+        height: 60px;
+        object-fit: cover;
+        border-radius: 4px;
+    }
+    
+    .order-details {
+        font-size: 12px;
+        color: #666;
+    }
+    
+    .view-btn {
+        display: inline-block;
+        padding: 8px 15px;
+        background: #ee4d2b;
+        color: white;
+        text-decoration: none;
+        border-radius: 4px;
+        font-size: 12px;
+        transition: background 0.3s;
+    }
+    
+    .view-btn:hover {
+        background: #d63e22;
+    }
+    
+    .empty-orders {
+        text-align: center;
+        padding: 60px 20px;
+        background: white;
+        border-radius: 8px;
+    }
+    
+    .empty-orders p {
+        font-size: 18px;
+        color: #999;
+        margin-bottom: 20px;
+    }
+    
+    @media (max-width: 768px) {
+        .order-header {
+            grid-template-columns: 1fr;
+            gap: 8px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>📦 คำสั่งซื้อของฉัน</h1>
+    
+    {% if orders %}
+        <div class="orders-list">
+            {% for order in orders %}
+                <div class="order-item">
+                    <div class="order-header">
+                        <div>
+                            <div class="order-number">{{ order.order_number }}</div>
+                            <div class="order-date">{{ order.created_at|date:"d/m/Y H:i" }}</div>
+                        </div>
+                        <div class="order-details">
+                            สินค้า {{ order.items.count }} ชิ้น
+                        </div>
+                        <div class="order-price">
+                            ฿{{ order.total_price|floatformat:0 }}
+                        </div>
+                        <div class="order-status {{ order.status }}">
+                            {% if order.status == 'pending' %}
+                                ⏳ รอชำระเงิน
+                            {% elif order.status == 'paid' %}
+                                ✓ ชำระแล้ว
+                            {% elif order.status == 'shipping' %}
+                                🚚 จัดส่ง
+                            {% elif order.status == 'delivered' %}
+                                📦 ส่งถึงแล้ว
+                            {% elif order.status == 'cancelled' %}
+                                ✗ ยกเลิก
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="order-items">
+                        {% for item in order.items.all|slice:":3" %}
+                            <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" class="order-item-image">
+                        {% endfor %}
+                    </div>
+                    
+                    <a href="{% url 'chopee:order_detail' order.id %}" class="view-btn">
+                        ดูรายละเอียด →
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="empty-orders">
+            <p>📦 คุณยังไม่มีคำสั่งซื้อ</p>
+            <a href="{% url 'chopee:products_list' %}" style="display: inline-block; padding: 12px 30px; background: #ee4d2b; color: white; text-decoration: none; border-radius: 4px;">
+                เริ่มช้อปปิ้ง
+            </a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

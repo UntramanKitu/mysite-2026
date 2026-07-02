@@ -1,0 +1,162 @@
+{% extends 'chopee/base.html' %}
+{% load static %}
+
+{% block title %}รีวิว {{ product.name }} - Chopee{% endblock %}
+
+{% block extra_css %}
+<style>
+    .review-container {
+        max-width: 600px;
+        margin: 0 auto;
+        background: white;
+        border-radius: 8px;
+        padding: 30px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    
+    .product-preview {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 30px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid #eee;
+    }
+    
+    .product-image {
+        width: 80px;
+        height: 80px;
+        object-fit: cover;
+        border-radius: 4px;
+    }
+    
+    .product-info h4 {
+        margin-bottom: 5px;
+    }
+    
+    .form-group {
+        margin-bottom: 20px;
+    }
+    
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 500;
+        color: #333;
+    }
+    
+    .rating-input {
+        display: flex;
+        gap: 10px;
+        font-size: 32px;
+    }
+    
+    .rating-input input {
+        display: none;
+    }
+    
+    .rating-input label {
+        cursor: pointer;
+        transition: transform 0.2s;
+    }
+    
+    .rating-input label:hover,
+    .rating-input input:checked + label {
+        transform: scale(1.2);
+    }
+    
+    .comment-textarea {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 14px;
+        font-family: inherit;
+        resize: vertical;
+        min-height: 120px;
+    }
+    
+    .comment-textarea:focus {
+        outline: none;
+        border-color: #ee4d2b;
+        box-shadow: 0 0 0 3px rgba(238, 77, 43, 0.1);
+    }
+    
+    .submit-btn {
+        width: 100%;
+        padding: 15px;
+        background: #ee4d2b;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background 0.3s;
+    }
+    
+    .submit-btn:hover {
+        background: #d63e22;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>✍️ เขียนรีวิวสินค้า</h1>
+    
+    <div class="review-container">
+        <!-- Product Preview -->
+        <div class="product-preview">
+            <img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-image">
+            <div class="product-info">
+                <h4>{{ product.name }}</h4>
+                <p style="font-size: 12px; color: #999;">
+                    <a href="{% url 'chopee:shop_detail' product.shop.id %}" style="color: #999;">
+                        {{ product.shop.shop_name }}
+                    </a>
+                </p>
+                <p style="font-weight: bold; color: #ee4d2b;">฿{{ product.discounted_price|floatformat:0 }}</p>
+            </div>
+        </div>
+        
+        <!-- Review Form -->
+        <form method="post">
+            {% csrf_token %}
+            
+            <!-- Rating -->
+            <div class="form-group">
+                <label>⭐ ให้คะแนน *</label>
+                <div class="rating-input">
+                    {% for i in "12345" %}
+                        <input type="radio" id="rating{{ i }}" name="rating" value="{{ i }}" 
+                               {% if review.rating|stringformat:"s" == i %}checked{% elif not review and forloop.first %}checked{% endif %}>
+                        <label for="rating{{ i }}">{{ i }}</label>
+                    {% endfor %}
+                </div>
+            </div>
+            
+            <!-- Comment -->
+            <div class="form-group">
+                <label>💬 ความเห็นของคุณ *</label>
+                <textarea class="comment-textarea" name="comment" required placeholder="แบ่งปันประสบการณ์การใช้งานสินค้าตรงนี้...">{% if review %}{{ review.comment }}{% endif %}</textarea>
+            </div>
+            
+            <!-- Submit -->
+            <button type="submit" class="submit-btn">
+                {% if review %}
+                    อัปเดตรีวิว
+                {% else %}
+                    ส่งรีวิว
+                {% endif %}
+            </button>
+        </form>
+        
+        <!-- Back Link -->
+        <div style="text-align: center; margin-top: 20px;">
+            <a href="{% url 'chopee:product_detail' product.slug %}" style="color: #ee4d2b; text-decoration: none;">
+                ← กลับไปที่สินค้า
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,451 @@
+{% extends 'chopee/base.html' %}
+{% load static %}
+
+{% block title %}{{ product.name }} - Chopee{% endblock %}
+
+{% block extra_css %}
+<style>
+    .product-detail-container {
+        background: white;
+        border-radius: 8px;
+        padding: 30px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    
+    .product-detail {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 40px;
+        margin-bottom: 40px;
+    }
+    
+    .product-images {
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .main-image {
+        width: 100%;
+        height: 400px;
+        object-fit: cover;
+        border-radius: 8px;
+        margin-bottom: 15px;
+        background: #f0f0f0;
+    }
+    
+    .thumbnail-images {
+        display: flex;
+        gap: 10px;
+    }
+    
+    .thumbnail {
+        width: 80px;
+        height: 80px;
+        object-fit: cover;
+        border-radius: 4px;
+        border: 2px solid #ddd;
+        cursor: pointer;
+        transition: border-color 0.3s;
+    }
+    
+    .thumbnail:hover {
+        border-color: #ee4d2b;
+    }
+    
+    .product-details {
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .product-title {
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 15px;
+        color: #333;
+    }
+    
+    .shop-info {
+        background: #f5f5f5;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+    
+    .shop-info a {
+        text-decoration: none;
+        color: #ee4d2b;
+        font-weight: 500;
+    }
+    
+    .product-price-section {
+        border: 2px solid #ee4d2b;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+    }
+    
+    .product-price {
+        font-size: 36px;
+        font-weight: bold;
+        color: #ee4d2b;
+        margin-bottom: 10px;
+    }
+    
+    .price-info {
+        display: flex;
+        gap: 10px;
+        font-size: 14px;
+        color: #666;
+    }
+    
+    .product-stats {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 15px;
+        margin-bottom: 20px;
+        background: #f9f9f9;
+        padding: 15px;
+        border-radius: 8px;
+    }
+    
+    .stat {
+        text-align: center;
+    }
+    
+    .stat-value {
+        font-size: 24px;
+        font-weight: bold;
+        color: #ee4d2b;
+    }
+    
+    .stat-label {
+        font-size: 12px;
+        color: #999;
+        margin-top: 5px;
+    }
+    
+    .product-stock {
+        padding: 10px;
+        background: #fff3e0;
+        border-radius: 4px;
+        margin-bottom: 20px;
+        font-size: 14px;
+    }
+    
+    .product-stock.in-stock {
+        background: #e8f5e9;
+        color: #2e7d32;
+    }
+    
+    .product-stock.out-stock {
+        background: #ffebee;
+        color: #c62828;
+    }
+    
+    .add-to-cart-section {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 30px;
+    }
+    
+    .quantity-selector {
+        display: flex;
+        align-items: center;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        overflow: hidden;
+    }
+    
+    .quantity-selector button {
+        padding: 8px 12px;
+        border: none;
+        background: #f0f0f0;
+        cursor: pointer;
+        font-size: 16px;
+    }
+    
+    .quantity-selector input {
+        border: none;
+        width: 50px;
+        text-align: center;
+        font-size: 14px;
+    }
+    
+    .add-to-cart-btn {
+        flex: 1;
+        padding: 15px;
+        background: #ee4d2b;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background 0.3s;
+    }
+    
+    .add-to-cart-btn:hover {
+        background: #d63e22;
+    }
+    
+    .add-to-cart-btn:disabled {
+        background: #ccc;
+        cursor: not-allowed;
+    }
+    
+    .product-description {
+        margin: 40px 0;
+    }
+    
+    .product-description h3 {
+        font-size: 18px;
+        margin-bottom: 15px;
+        color: #333;
+    }
+    
+    .product-description p {
+        line-height: 1.6;
+        color: #666;
+        white-space: pre-wrap;
+    }
+    
+    .reviews-section {
+        margin-top: 40px;
+    }
+    
+    .reviews-section h3 {
+        font-size: 18px;
+        margin-bottom: 20px;
+        color: #333;
+    }
+    
+    .review-item {
+        background: #f9f9f9;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 15px;
+    }
+    
+    .review-header {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 10px;
+    }
+    
+    .review-author {
+        font-weight: 500;
+        color: #333;
+    }
+    
+    .review-rating {
+        color: #ffa41c;
+        font-size: 14px;
+    }
+    
+    .review-date {
+        font-size: 12px;
+        color: #999;
+    }
+    
+    .review-text {
+        color: #666;
+        line-height: 1.5;
+    }
+    
+    .similar-products {
+        margin-top: 40px;
+    }
+    
+    .similar-products h3 {
+        font-size: 18px;
+        margin-bottom: 20px;
+        color: #333;
+    }
+    
+    .similar-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        gap: 15px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="product-detail-container">
+        <!-- Product Detail -->
+        <div class="product-detail">
+            <!-- Images -->
+            <div class="product-images">
+                <img id="mainImage" src="{{ product.image.url }}" alt="{{ product.name }}" class="main-image">
+                <div class="thumbnail-images">
+                    <img src="{{ product.image.url }}" alt="{{ product.name }}" class="thumbnail" onclick="document.getElementById('mainImage').src=this.src">
+                    {% for img in product.images.all %}
+                        <img src="{{ img.image.url }}" alt="{{ product.name }}" class="thumbnail" onclick="document.getElementById('mainImage').src=this.src">
+                    {% endfor %}
+                </div>
+            </div>
+            
+            <!-- Details -->
+            <div class="product-details">
+                <h1 class="product-title">{{ product.name }}</h1>
+                
+                <!-- Shop Info -->
+                <div class="shop-info">
+                    <div>🏪 <strong>ร้านค้า:</strong></div>
+                    <a href="{% url 'chopee:shop_detail' product.shop.id %}">{{ product.shop.shop_name }}</a>
+                </div>
+                
+                <!-- Price -->
+                <div class="product-price-section">
+                    <div class="product-price">฿{{ product.discounted_price|floatformat:0 }}</div>
+                    <div class="price-info">
+                        {% if product.discount_percentage > 0 %}
+                            <span>ราคาเต็ม: ฿{{ product.price|floatformat:0 }}</span>
+                            <span style="color: #ee4d2b; font-weight: bold;">-{{ product.discount_percentage }}% ลด</span>
+                        {% else %}
+                            <span>ราคา: ฿{{ product.price|floatformat:0 }}</span>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <!-- Stats -->
+                <div class="product-stats">
+                    <div class="stat">
+                        <div class="stat-value">⭐ {{ product.rating|floatformat:1 }}</div>
+                        <div class="stat-label">คะแนน</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">{{ product.sold_count }}</div>
+                        <div class="stat-label">ขายแล้ว</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">{{ product.view_count }}</div>
+                        <div class="stat-label">ดู</div>
+                    </div>
+                </div>
+                
+                <!-- Stock -->
+                {% if product.stock > 0 %}
+                    <div class="product-stock in-stock">✓ มีสต็อก: {{ product.stock }} ชิ้น</div>
+                {% else %}
+                    <div class="product-stock out-stock">✗ หมดสต็อก</div>
+                {% endif %}
+                
+                <!-- Add to Cart -->
+                {% if product.stock > 0 %}
+                    <div class="add-to-cart-section">
+                        <form method="post" action="{% url 'chopee:add_to_cart' product.id %}" style="display: flex; gap: 15px; width: 100%;">
+                            {% csrf_token %}
+                            <div class="quantity-selector">
+                                <button type="button" onclick="decreaseQuantity()">−</button>
+                                <input type="number" id="quantity" name="quantity" value="1" min="1" max="{{ product.stock }}">
+                                <button type="button" onclick="increaseQuantity()">+</button>
+                            </div>
+                            <button type="submit" class="add-to-cart-btn">🛒 เพิ่มลงตะกร้า</button>
+                        </form>
+                    </div>
+                {% endif %}
+                
+                <!-- Category -->
+                {% if product.category %}
+                    <p><strong>หมวดหมู่:</strong> {{ product.category.name }}</p>
+                {% endif %}
+            </div>
+        </div>
+        
+        <!-- Description -->
+        <div class="product-description">
+            <h3>📝 รายละเอียดสินค้า</h3>
+            <p>{{ product.description }}</p>
+        </div>
+        
+        <!-- Reviews -->
+        <div class="reviews-section">
+            <h3>⭐ รีวิว ({{ product.reviews.count }})</h3>
+            
+            {% if user.is_authenticated %}
+                <a href="{% url 'chopee:add_review' product.id %}" style="display: inline-block; margin-bottom: 20px; padding: 10px 20px; background: #ee4d2b; color: white; text-decoration: none; border-radius: 4px;">
+                    ✍️ เขียนรีวิว
+                </a>
+            {% else %}
+                <p style="color: #999; margin-bottom: 20px;">
+                    <a href="{% url 'admin:login' %}">เข้าสู่ระบบ</a> เพื่อเขียนรีวิว
+                </p>
+            {% endif %}
+            
+            {% if product.reviews.all %}
+                {% for review in product.reviews.all %}
+                    <div class="review-item">
+                        <div class="review-header">
+                            <div>
+                                <div class="review-author">{{ review.user.first_name }} {{ review.user.last_name }}</div>
+                                <div class="review-rating">⭐ {{ review.rating }} / 5</div>
+                            </div>
+                            <div class="review-date">{{ review.created_at|date:"d/m/Y" }}</div>
+                        </div>
+                        <div class="review-text">{{ review.comment }}</div>
+                        {% if review.image %}
+                            <img src="{{ review.image.url }}" alt="Review" style="max-width: 300px; margin-top: 10px; border-radius: 4px;">
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p style="color: #999;">ยังไม่มีรีวิว</p>
+            {% endif %}
+        </div>
+        
+        <!-- Similar Products -->
+        {% if similar_products %}
+            <div class="similar-products">
+                <h3>🛍️ สินค้าที่คล้ายกัน</h3>
+                <div class="similar-grid">
+                    {% for similar in similar_products %}
+                        <div style="background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                            <a href="{% url 'chopee:product_detail' similar.slug %}">
+                                <img src="{{ similar.image.url }}" alt="{{ similar.name }}" style="width: 100%; height: 150px; object-fit: cover;">
+                            </a>
+                            <div style="padding: 12px;">
+                                <a href="{% url 'chopee:product_detail' similar.slug %}" style="text-decoration: none;">
+                                    <div style="font-size: 13px; font-weight: 500; margin-bottom: 8px; color: #333;">{{ similar.name }}</div>
+                                </a>
+                                <div style="font-size: 14px; font-weight: bold; color: #ee4d2b; margin-bottom: 8px;">
+                                    ฿{{ similar.discounted_price|floatformat:0 }}
+                                </div>
+                                <form method="post" action="{% url 'chopee:add_to_cart' similar.id %}">
+                                    {% csrf_token %}
+                                    <button type="submit" style="width: 100%; padding: 6px; background: #ee4d2b; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 12px;">
+                                        🛒 เพิ่มลงตะกร้า
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+function increaseQuantity() {
+    const input = document.getElementById('quantity');
+    const max = parseInt(input.max);
+    const current = parseInt(input.value);
+    if (current < max) {
+        input.value = current + 1;
+    }
+}
+
+function decreaseQuantity() {
+    const input = document.getElementById('quantity');
+    const current = parseInt(input.value);
+    if (current > 1) {
+        input.value = current - 1;
+    }
+}
+</script>
+{% endblock %}

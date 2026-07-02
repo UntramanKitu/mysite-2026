@@ -1,0 +1,203 @@
+{% extends 'chopee/base.html' %}
+{% load static %}
+
+{% block title %}ร้านค้าต่างๆ - Chopee{% endblock %}
+
+{% block extra_css %}
+<style>
+    .shops-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 20px;
+    }
+    
+    .shop-card {
+        background: white;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+    
+    .shop-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+    
+    .shop-banner {
+        width: 100%;
+        height: 150px;
+        object-fit: cover;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+    
+    .shop-body {
+        padding: 15px;
+    }
+    
+    .shop-avatar {
+        width: 60px;
+        height: 60px;
+        border-radius: 8px;
+        object-fit: cover;
+        background: #f0f0f0;
+        margin-bottom: 12px;
+        margin-top: -40px;
+        border: 2px solid white;
+    }
+    
+    .shop-name {
+        font-size: 16px;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 8px;
+        display: -webkit-box;
+        -webkit-line-clamp: 1;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+    
+    .shop-stats {
+        display: flex;
+        gap: 12px;
+        margin-bottom: 12px;
+        font-size: 12px;
+        color: #666;
+    }
+    
+    .shop-stat {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+    
+    .shop-description {
+        font-size: 12px;
+        color: #999;
+        margin-bottom: 12px;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        line-height: 1.4;
+    }
+    
+    .shop-footer {
+        display: flex;
+        gap: 10px;
+    }
+    
+    .view-btn,
+    .follow-btn {
+        flex: 1;
+        padding: 8px;
+        border: none;
+        border-radius: 4px;
+        font-size: 12px;
+        cursor: pointer;
+        font-weight: 500;
+        text-decoration: none;
+        display: block;
+        text-align: center;
+        transition: background 0.3s;
+    }
+    
+    .view-btn {
+        background: #ee4d2b;
+        color: white;
+    }
+    
+    .view-btn:hover {
+        background: #d63e22;
+    }
+    
+    .follow-btn {
+        background: #f0f0f0;
+        color: #333;
+        border: 1px solid #ddd;
+    }
+    
+    .follow-btn:hover {
+        background: #e8e8e8;
+    }
+    
+    .shops-header {
+        margin-bottom: 30px;
+    }
+    
+    .shops-header h1 {
+        font-size: 28px;
+        margin-bottom: 10px;
+    }
+    
+    .shops-header p {
+        color: #666;
+        font-size: 14px;
+    }
+    
+    .empty-shops {
+        text-align: center;
+        padding: 60px 20px;
+        background: white;
+        border-radius: 8px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="shops-header">
+        <h1>🏪 ร้านค้า</h1>
+        <p>ค้นหาร้านค้าที่คุณชอบและติดตามอัปเดตสินค้าใหม่</p>
+    </div>
+    
+    {% if shops %}
+        <div class="shops-grid">
+            {% for shop in shops %}
+                <div class="shop-card">
+                    {% if shop.shop_banner %}
+                        <img src="{{ shop.shop_banner.url }}" alt="{{ shop.shop_name }}" class="shop-banner">
+                    {% else %}
+                        <div class="shop-banner"></div>
+                    {% endif %}
+                    
+                    <div class="shop-body">
+                        {% if shop.shop_avatar %}
+                            <img src="{{ shop.shop_avatar.url }}" alt="{{ shop.shop_name }}" class="shop-avatar">
+                        {% else %}
+                            <div class="shop-avatar" style="display: flex; align-items: center; justify-content: center; font-size: 24px;">
+                                🏪
+                            </div>
+                        {% endif %}
+                        
+                        <div class="shop-name">{{ shop.shop_name }}</div>
+                        
+                        <div class="shop-stats">
+                            <div class="shop-stat">⭐ {{ shop.rating|floatformat:1 }}</div>
+                            <div class="shop-stat">♥️ {{ shop.follow_count }}</div>
+                            <div class="shop-stat">📦 {{ shop.products.count }}</div>
+                        </div>
+                        
+                        {% if shop.description %}
+                            <p class="shop-description">{{ shop.description }}</p>
+                        {% endif %}
+                        
+                        <div class="shop-footer">
+                            <a href="{% url 'chopee:shop_detail' shop.id %}" class="view-btn">
+                                👀 ดูร้าน
+                            </a>
+                            <button class="follow-btn" onclick="alert('ติดตามร้าน {{ shop.shop_name }}!')">
+                                ♥️ ติดตาม
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="empty-shops">
+            <p>🏪 ยังไม่มีร้านค้า</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

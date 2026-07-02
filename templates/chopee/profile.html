@@ -1,0 +1,266 @@
+{% extends 'chopee/base.html' %}
+{% load static %}
+
+{% block title %}โปรไฟล์ของฉัน - Chopee{% endblock %}
+
+{% block extra_css %}
+<style>
+    .profile-container {
+        display: grid;
+        grid-template-columns: 250px 1fr;
+        gap: 20px;
+    }
+    
+    .profile-sidebar {
+        background: white;
+        border-radius: 8px;
+        padding: 20px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        height: fit-content;
+        position: sticky;
+        top: 80px;
+    }
+    
+    .profile-avatar {
+        width: 100%;
+        height: 150px;
+        border-radius: 8px;
+        object-fit: cover;
+        background: #f0f0f0;
+        margin-bottom: 15px;
+    }
+    
+    .profile-name {
+        font-size: 18px;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 5px;
+        text-align: center;
+    }
+    
+    .profile-email {
+        font-size: 12px;
+        color: #999;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    
+    .profile-menu {
+        list-style: none;
+    }
+    
+    .profile-menu li {
+        margin-bottom: 10px;
+    }
+    
+    .profile-menu a {
+        display: block;
+        padding: 10px 15px;
+        color: #333;
+        text-decoration: none;
+        border-radius: 4px;
+        transition: background 0.3s;
+    }
+    
+    .profile-menu a:hover,
+    .profile-menu a.active {
+        background: #ee4d2b;
+        color: white;
+    }
+    
+    .profile-content {
+        background: white;
+        border-radius: 8px;
+        padding: 30px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    
+    .profile-content h2 {
+        font-size: 24px;
+        margin-bottom: 20px;
+        color: #333;
+    }
+    
+    .form-group {
+        margin-bottom: 20px;
+    }
+    
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 500;
+        color: #333;
+    }
+    
+    .form-group input,
+    .form-group textarea {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 14px;
+        font-family: inherit;
+    }
+    
+    .form-group textarea {
+        resize: vertical;
+        min-height: 80px;
+    }
+    
+    .form-group input:focus,
+    .form-group textarea:focus {
+        outline: none;
+        border-color: #ee4d2b;
+        box-shadow: 0 0 0 3px rgba(238, 77, 43, 0.1);
+    }
+    
+    .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+    }
+    
+    .submit-btn {
+        display: inline-block;
+        padding: 12px 30px;
+        background: #ee4d2b;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background 0.3s;
+    }
+    
+    .submit-btn:hover {
+        background: #d63e22;
+    }
+    
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 15px;
+        margin-bottom: 30px;
+    }
+    
+    .stat-card {
+        background: #f9f9f9;
+        padding: 20px;
+        border-radius: 8px;
+        text-align: center;
+        border-left: 4px solid #ee4d2b;
+    }
+    
+    .stat-value {
+        font-size: 24px;
+        font-weight: bold;
+        color: #ee4d2b;
+    }
+    
+    .stat-label {
+        font-size: 12px;
+        color: #999;
+        margin-top: 5px;
+    }
+    
+    @media (max-width: 768px) {
+        .profile-container {
+            grid-template-columns: 1fr;
+        }
+        
+        .form-row {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="profile-container">
+        <!-- Sidebar -->
+        <div class="profile-sidebar">
+            {% if profile.avatar %}
+                <img src="{{ profile.avatar.url }}" alt="{{ user.first_name }}" class="profile-avatar">
+            {% else %}
+                <div class="profile-avatar" style="display: flex; align-items: center; justify-content: center; font-size: 60px;">
+                    👤
+                </div>
+            {% endif %}
+            
+            <div class="profile-name">{{ user.first_name }} {{ user.last_name }}</div>
+            <div class="profile-email">{{ user.email }}</div>
+            
+            <ul class="profile-menu">
+                <li><a href="{% url 'chopee:user_profile' %}" class="active">👤 โปรไฟล์</a></li>
+                <li><a href="{% url 'chopee:orders_list' %}">📦 คำสั่งซื้อ</a></li>
+                <li><a href="#">💌 ข้อความ</a></li>
+                <li><a href="#">♥️ รายการโปรด</a></li>
+                <li><a href="#">⚙️ การตั้งค่า</a></li>
+            </ul>
+        </div>
+        
+        <!-- Content -->
+        <div class="profile-content">
+            <h2>👤 โปรไฟล์ของฉัน</h2>
+            
+            <!-- Stats -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value">{{ user.orders.count }}</div>
+                    <div class="stat-label">คำสั่งซื้อ</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">{{ profile.followed_shops.count }}</div>
+                    <div class="stat-label">ร้านที่ติดตาม</div>
+                </div>
+            </div>
+            
+            <!-- Form -->
+            <form method="post">
+                {% csrf_token %}
+                
+                <div class="form-group">
+                    <label>📧 อีเมล</label>
+                    <input type="email" value="{{ user.email }}" disabled style="background: #f5f5f5; cursor: not-allowed;">
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>👤 ชื่อ</label>
+                        <input type="text" value="{{ user.first_name }}" disabled style="background: #f5f5f5; cursor: not-allowed;">
+                    </div>
+                    <div class="form-group">
+                        <label>👤 นามสกุล</label>
+                        <input type="text" value="{{ user.last_name }}" disabled style="background: #f5f5f5; cursor: not-allowed;">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>📱 เบอร์โทรศัพท์</label>
+                    <input type="tel" name="phone_number" value="{{ profile.phone_number }}" placeholder="กรุณากรอกเบอร์โทรศัพท์ของคุณ">
+                </div>
+                
+                <div class="form-group">
+                    <label>📍 ที่อยู่</label>
+                    <textarea name="address" placeholder="บ้านเลขที่ ซอย ถนน...">{{ profile.address }}</textarea>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>🏙️ เมือง</label>
+                        <input type="text" name="city" value="{{ profile.city }}" placeholder="เมือง">
+                    </div>
+                    <div class="form-group">
+                        <label>📮 รหัสไปรษณีย์</label>
+                        <input type="text" name="postal_code" value="{{ profile.postal_code }}" placeholder="รหัสไปรษณีย์">
+                    </div>
+                </div>
+                
+                <button type="submit" class="submit-btn">💾 บันทึกการเปลี่ยนแปลง</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

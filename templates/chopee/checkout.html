@@ -1,0 +1,234 @@
+{% extends 'chopee/base.html' %}
+{% load static %}
+
+{% block title %}ชำระเงิน - Chopee{% endblock %}
+
+{% block extra_css %}
+<style>
+    .checkout-container {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 20px;
+    }
+    
+    .checkout-form {
+        background: white;
+        border-radius: 8px;
+        padding: 30px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    
+    .form-section {
+        margin-bottom: 30px;
+    }
+    
+    .form-section h3 {
+        font-size: 18px;
+        margin-bottom: 15px;
+        color: #333;
+        border-bottom: 2px solid #ee4d2b;
+        padding-bottom: 10px;
+    }
+    
+    .form-group {
+        margin-bottom: 15px;
+    }
+    
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 500;
+        color: #333;
+    }
+    
+    .form-group input,
+    .form-group textarea {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 14px;
+        font-family: inherit;
+    }
+    
+    .form-group textarea {
+        resize: vertical;
+        min-height: 80px;
+    }
+    
+    .form-group input:focus,
+    .form-group textarea:focus {
+        outline: none;
+        border-color: #ee4d2b;
+        box-shadow: 0 0 0 3px rgba(238, 77, 43, 0.1);
+    }
+    
+    .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+    }
+    
+    .order-summary {
+        background: white;
+        border-radius: 8px;
+        padding: 20px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        height: fit-content;
+        position: sticky;
+        top: 80px;
+    }
+    
+    .order-summary h3 {
+        font-size: 18px;
+        margin-bottom: 15px;
+        color: #333;
+        border-bottom: 2px solid #eee;
+        padding-bottom: 10px;
+    }
+    
+    .summary-item {
+        display: flex;
+        justify-content: space-between;
+        padding: 10px 0;
+        font-size: 14px;
+        border-bottom: 1px solid #f0f0f0;
+    }
+    
+    .summary-item-image {
+        width: 60px;
+        height: 60px;
+        object-fit: cover;
+        border-radius: 4px;
+        margin-bottom: 10px;
+    }
+    
+    .summary-total {
+        display: flex;
+        justify-content: space-between;
+        padding: 15px 0;
+        font-size: 18px;
+        font-weight: bold;
+        color: #ee4d2b;
+        border-top: 2px solid #eee;
+        border-bottom: 2px solid #eee;
+        margin: 20px 0;
+    }
+    
+    .submit-btn {
+        width: 100%;
+        padding: 15px;
+        background: #ee4d2b;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background 0.3s;
+    }
+    
+    .submit-btn:hover {
+        background: #d63e22;
+    }
+    
+    .error-message {
+        background: #ffebee;
+        color: #c62828;
+        padding: 15px;
+        border-radius: 4px;
+        margin-bottom: 20px;
+    }
+    
+    @media (max-width: 768px) {
+        .checkout-container {
+            grid-template-columns: 1fr;
+        }
+        
+        .form-row {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>💳 ชำระเงิน</h1>
+    
+    {% if error %}
+        <div class="error-message">
+            ⚠️ {{ error }}
+        </div>
+    {% endif %}
+    
+    <div class="checkout-container">
+        <form method="post" class="checkout-form">
+            {% csrf_token %}
+            
+            <!-- Shipping Information -->
+            <div class="form-section">
+                <h3>📍 ที่อยู่จัดส่ง</h3>
+                
+                <div class="form-group">
+                    <label for="shipping_address">ที่อยู่ *</label>
+                    <textarea id="shipping_address" name="shipping_address" required placeholder="เขียนที่อยู่สำเร็จรูป เช่น บ้านเลขที่ ซอย ถนน ..."></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="phone_number">เบอร์โทรศัพท์ *</label>
+                    <input type="tel" id="phone_number" name="phone_number" required placeholder="กรุณากรอกเบอร์โทรศัพท์ของคุณ">
+                </div>
+            </div>
+            
+            <!-- Order Summary in Form -->
+            <div style="display: none;">
+                <input type="hidden" name="total_price" value="{{ cart.total_price }}">
+            </div>
+            
+            <!-- Submit Button -->
+            <button type="submit" class="submit-btn">
+                ยืนยันคำสั่งซื้อ
+            </button>
+        </form>
+        
+        <!-- Order Summary -->
+        <div class="order-summary">
+            <h3>📦 สรุปคำสั่ง</h3>
+            
+            {% for item in cart.items.all %}
+                <div style="margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px solid #f0f0f0;">
+                    <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" class="summary-item-image">
+                    <div style="font-weight: 500; font-size: 13px; margin-bottom: 5px;">{{ item.product.name }}</div>
+                    <div style="font-size: 12px; color: #999; margin-bottom: 5px;">
+                        จำนวน: {{ item.quantity }} ชิ้น
+                    </div>
+                    <div style="font-weight: bold; color: #ee4d2b;">
+                        ฿{{ item.total_price|floatformat:0 }}
+                    </div>
+                </div>
+            {% endfor %}
+            
+            {% with total=cart.total_price %}
+                <div class="summary-total">
+                    <span>รวมทั้งสิ้น:</span>
+                    <span>฿{{ total|floatformat:0 }}</span>
+                </div>
+            {% endwith %}
+            
+            <div style="background: #f9f9f9; padding: 15px; border-radius: 4px; font-size: 13px; color: #666; margin-bottom: 15px;">
+                <p style="margin-bottom: 8px;"><strong>ข้อมูลการจัดส่ง:</strong></p>
+                <ul style="margin-left: 15px;">
+                    <li>⏱️ จัดส่งภายใน 2-5 วันทำการ</li>
+                    <li>📍 ทั่วประเทศไทย</li>
+                    <li>💳 ชำระเงินปลายทาง</li>
+                </ul>
+            </div>
+            
+            <a href="{% url 'chopee:cart' %}" style="display: block; text-align: center; padding: 10px; color: #ee4d2b; text-decoration: none; border: 1px solid #ee4d2b; border-radius: 4px;">
+                ← กลับไปที่ตะกร้า
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

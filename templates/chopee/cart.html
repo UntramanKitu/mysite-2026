@@ -1,0 +1,280 @@
+{% extends 'chopee/base.html' %}
+{% load static %}
+
+{% block title %}ตะกร้าสินค้า - Chopee{% endblock %}
+
+{% block extra_css %}
+<style>
+    .cart-container {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 20px;
+    }
+    
+    .cart-items {
+        background: white;
+        border-radius: 8px;
+        padding: 20px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    
+    .cart-summary {
+        background: white;
+        border-radius: 8px;
+        padding: 20px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        height: fit-content;
+        position: sticky;
+        top: 80px;
+    }
+    
+    .cart-item {
+        display: grid;
+        grid-template-columns: 100px 1fr 100px 100px;
+        gap: 15px;
+        padding: 15px;
+        border-bottom: 1px solid #eee;
+        align-items: center;
+    }
+    
+    .cart-item:last-child {
+        border-bottom: none;
+    }
+    
+    .cart-item-image {
+        width: 100px;
+        height: 100px;
+        object-fit: cover;
+        border-radius: 4px;
+    }
+    
+    .cart-item-info h4 {
+        margin-bottom: 5px;
+        font-size: 14px;
+    }
+    
+    .cart-item-info p {
+        font-size: 12px;
+        color: #999;
+        margin-bottom: 5px;
+    }
+    
+    .cart-item-price {
+        font-weight: bold;
+        color: #ee4d2b;
+    }
+    
+    .quantity-control {
+        display: flex;
+        align-items: center;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+    }
+    
+    .quantity-control button {
+        padding: 5px 10px;
+        border: none;
+        background: #f0f0f0;
+        cursor: pointer;
+    }
+    
+    .quantity-control input {
+        width: 40px;
+        border: none;
+        text-align: center;
+    }
+    
+    .remove-btn {
+        padding: 8px 12px;
+        background: #ff4444;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 12px;
+    }
+    
+    .remove-btn:hover {
+        background: #cc0000;
+    }
+    
+    .summary-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 10px 0;
+        font-size: 14px;
+    }
+    
+    .summary-row.total {
+        border-top: 2px solid #eee;
+        border-bottom: 2px solid #eee;
+        padding: 15px 0;
+        font-size: 18px;
+        font-weight: bold;
+        color: #ee4d2b;
+    }
+    
+    .checkout-btn {
+        width: 100%;
+        padding: 15px;
+        background: #ee4d2b;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        margin-top: 20px;
+    }
+    
+    .checkout-btn:hover {
+        background: #d63e22;
+    }
+    
+    .continue-shopping {
+        text-align: center;
+        margin-top: 20px;
+    }
+    
+    .continue-shopping a {
+        color: #ee4d2b;
+        text-decoration: none;
+        font-weight: 500;
+    }
+    
+    .empty-cart {
+        text-align: center;
+        padding: 60px 20px;
+        background: white;
+        border-radius: 8px;
+    }
+    
+    .empty-cart p {
+        font-size: 18px;
+        color: #999;
+        margin-bottom: 20px;
+    }
+    
+    .empty-cart a {
+        display: inline-block;
+        padding: 12px 30px;
+        background: #ee4d2b;
+        color: white;
+        text-decoration: none;
+        border-radius: 4px;
+    }
+    
+    @media (max-width: 768px) {
+        .cart-container {
+            grid-template-columns: 1fr;
+        }
+        
+        .cart-item {
+            grid-template-columns: 80px 1fr;
+            gap: 10px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>🛒 ตะกร้าสินค้า</h1>
+    
+    {% if cart.items.all %}
+        <div class="cart-container">
+            <div class="cart-items">
+                {% for item in cart.items.all %}
+                    <div class="cart-item">
+                        <a href="{% url 'chopee:product_detail' item.product.slug %}">
+                            <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" class="cart-item-image">
+                        </a>
+                        
+                        <div class="cart-item-info">
+                            <h4>
+                                <a href="{% url 'chopee:product_detail' item.product.slug %}" style="text-decoration: none; color: #333;">
+                                    {{ item.product.name }}
+                                </a>
+                            </h4>
+                            <p>
+                                <a href="{% url 'chopee:shop_detail' item.product.shop.id %}" style="text-decoration: none; color: #999;">
+                                    {{ item.product.shop.shop_name }}
+                                </a>
+                            </p>
+                            <div class="cart-item-price">
+                                ฿{{ item.product.discounted_price|floatformat:0 }}
+                            </div>
+                        </div>
+                        
+                        <form method="post" action="{% url 'chopee:update_cart_item' item.id %}" style="display: flex; gap: 5px;">
+                            {% csrf_token %}
+                            <div class="quantity-control">
+                                <button type="button" onclick="decreaseQty(this)">−</button>
+                                <input type="number" name="quantity" value="{{ item.quantity }}" min="1" onchange="this.form.submit()">
+                                <button type="button" onclick="increaseQty(this)">+</button>
+                            </div>
+                        </form>
+                        
+                        <div style="text-align: right;">
+                            <div style="font-weight: bold; margin-bottom: 10px;">
+                                ฿{{ item.total_price|floatformat:0 }}
+                            </div>
+                            <form method="post" action="{% url 'chopee:remove_from_cart' item.id %}" style="display: inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="remove-btn">🗑️ ลบ</button>
+                            </form>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            
+            <div class="cart-summary">
+                <h3 style="margin-bottom: 20px;">สรุปสินค้า</h3>
+                
+                <div class="summary-row">
+                    <span>จำนวนสินค้า:</span>
+                    <span>{{ cart.items.count }} ชิ้น</span>
+                </div>
+                
+                {% with total=cart.total_price %}
+                    <div class="summary-row total">
+                        <span>รวมทั้งสิ้น:</span>
+                        <span>฿{{ total|floatformat:0 }}</span>
+                    </div>
+                {% endwith %}
+                
+                <p style="font-size: 12px; color: #999; margin-top: 15px;">
+                    ✓ ฟรีค่าจัดส่ง (สำหรับซื้อครั้งแรก)
+                </p>
+                
+                <a href="{% url 'chopee:checkout' %}" class="checkout-btn">
+                    ดำเนินการชำระเงิน
+                </a>
+                
+                <div class="continue-shopping">
+                    <a href="{% url 'chopee:products_list' %}">← ดำเนินการช้อปปิ้งต่อ</a>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <div class="empty-cart">
+            <p>🛒 ตะกร้าสินค้าของคุณว่างเปล่า</p>
+            <a href="{% url 'chopee:products_list' %}">เริ่มช้อปปิ้ง</a>
+        </div>
+    {% endif %}
+</div>
+
+<script>
+function increaseQty(btn) {
+    const input = btn.parentElement.querySelector('input');
+    input.value = parseInt(input.value) + 1;
+}
+
+function decreaseQty(btn) {
+    const input = btn.parentElement.querySelector('input');
+    if (parseInt(input.value) > 1) {
+        input.value = parseInt(input.value) - 1;
+    }
+}
+</script>
+{% endblock %}

@@ -1,0 +1,234 @@
+{% extends 'chopee/base.html' %}
+{% load static %}
+
+{% block title %}{{ shop.shop_name }} - Chopee{% endblock %}
+
+{% block extra_css %}
+<style>
+    .shop-banner {
+        width: 100%;
+        height: 250px;
+        object-fit: cover;
+        border-radius: 8px 8px 0 0;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+    
+    .shop-header {
+        background: white;
+        padding: 20px;
+        border-radius: 0 0 8px 8px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        margin-bottom: 20px;
+        display: grid;
+        grid-template-columns: 120px 1fr;
+        gap: 20px;
+    }
+    
+    .shop-avatar {
+        width: 120px;
+        height: 120px;
+        border-radius: 8px;
+        object-fit: cover;
+        background: #f0f0f0;
+        margin-top: -80px;
+        border: 3px solid white;
+    }
+    
+    .shop-info {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        padding-top: 20px;
+    }
+    
+    .shop-name {
+        font-size: 24px;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 10px;
+    }
+    
+    .shop-stats {
+        display: flex;
+        gap: 30px;
+        margin-bottom: 15px;
+        flex-wrap: wrap;
+    }
+    
+    .stat {
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .stat-value {
+        font-size: 18px;
+        font-weight: bold;
+        color: #ee4d2b;
+    }
+    
+    .stat-label {
+        font-size: 12px;
+        color: #999;
+    }
+    
+    .shop-description {
+        color: #666;
+        font-size: 14px;
+        line-height: 1.5;
+        margin-bottom: 15px;
+    }
+    
+    .follow-btn {
+        display: inline-block;
+        padding: 10px 30px;
+        background: #ee4d2b;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-weight: bold;
+        text-decoration: none;
+    }
+    
+    .follow-btn:hover {
+        background: #d63e22;
+    }
+    
+    .products-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 15px;
+    }
+    
+    .product-card {
+        background: white;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+    
+    .product-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+    
+    .product-image {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        background: #f0f0f0;
+    }
+    
+    .product-info {
+        padding: 12px;
+    }
+    
+    .product-name {
+        font-size: 14px;
+        font-weight: 500;
+        margin-bottom: 8px;
+        color: #333;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+    
+    .product-price {
+        font-size: 14px;
+        font-weight: bold;
+        color: #ee4d2b;
+        margin-bottom: 8px;
+    }
+    
+    .empty-shop {
+        text-align: center;
+        padding: 60px 20px;
+        background: white;
+        border-radius: 8px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Shop Banner -->
+    {% if shop.shop_banner %}
+        <img src="{{ shop.shop_banner.url }}" alt="{{ shop.shop_name }}" class="shop-banner">
+    {% else %}
+        <div class="shop-banner"></div>
+    {% endif %}
+    
+    <!-- Shop Header -->
+    <div class="shop-header">
+        {% if shop.shop_avatar %}
+            <img src="{{ shop.shop_avatar.url }}" alt="{{ shop.shop_name }}" class="shop-avatar">
+        {% else %}
+            <div class="shop-avatar" style="display: flex; align-items: center; justify-content: center; font-size: 40px;">
+                🏪
+            </div>
+        {% endif %}
+        
+        <div class="shop-info">
+            <div class="shop-name">{{ shop.shop_name }}</div>
+            
+            <div class="shop-stats">
+                <div class="stat">
+                    <div class="stat-value">⭐ {{ shop.rating|floatformat:1 }}</div>
+                    <div class="stat-label">คะแนน</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">{{ shop.follow_count }}</div>
+                    <div class="stat-label">ผู้ติดตาม</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">{{ shop.products.count }}</div>
+                    <div class="stat-label">สินค้า</div>
+                </div>
+            </div>
+            
+            {% if shop.description %}
+                <p class="shop-description">{{ shop.description }}</p>
+            {% endif %}
+            
+            {% if user.is_authenticated %}
+                <button class="follow-btn" onclick="alert('ติดตามร้าน!')">
+                    ♥️ ติดตาม
+                </button>
+            {% endif %}
+        </div>
+    </div>
+    
+    <!-- Shop Products -->
+    <h2 style="margin: 30px 0 20px 0;">📦 สินค้าของร้าน</h2>
+    
+    {% if products %}
+        <div class="products-grid">
+            {% for product in products %}
+                <div class="product-card">
+                    <a href="{% url 'chopee:product_detail' product.slug %}">
+                        <img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-image">
+                    </a>
+                    <div class="product-info">
+                        <a href="{% url 'chopee:product_detail' product.slug %}" style="text-decoration: none;">
+                            <div class="product-name">{{ product.name }}</div>
+                        </a>
+                        <div class="product-price">฿{{ product.discounted_price|floatformat:0 }}</div>
+                        <form method="post" action="{% url 'chopee:add_to_cart' product.id %}">
+                            {% csrf_token %}
+                            <button type="submit" style="width: 100%; padding: 8px; background: #ee4d2b; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 12px;">
+                                🛒 เพิ่มลงตะกร้า
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="empty-shop">
+            <p>ร้านค้านี้ยังไม่มีสินค้า</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
