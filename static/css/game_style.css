@@ -1,9 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700&family=Orbitron:wght@400;600;800;900&display=swap');
 
 :root {
-    --color-bg-darker: #05060b;
-    --color-bg-dark: #0b0d19;
-    --color-bg-card: #121526;
+    --color-bg-darker: #030407; /* darker for page base */
+    --color-bg-dark: #070814; /* slightly deeper, reduces washed look */
+    --color-bg-card: #0e1120; /* cards a bit richer */
     --color-primary: #00f0ff;
     /* Neon Cyan */
     --color-secondary: #bd00ff;

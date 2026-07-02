@@ -312,7 +312,9 @@
                         <div class="system-profile">
                             <div class="profile-item">
                                 <span class="profile-label">NAME</span>
-                                <span class="profile-value">SUNG JINWOO</span>
+                                <clickable class="profile-value" id="playerName" role="button" style="cursor: pointer; size: 0.6rem;">✎</clickable>
+                                <span class="profile-value" id="playerNameDisplay">[Name]</span>
+                                <span class="profile-value" style="color: var(--color-accent); font-size: 0.8rem; margin-left: 0.5rem;">[Cat Slayer]</span>
                             </div>
                             <div class="profile-item">
                                 <span class="profile-label">LEVEL</span>
@@ -812,6 +814,48 @@
                 // Reset default skill text description
                 skillDescText.innerText = data.skills[0].name + ': ' + data.skills[0].desc;
             });
+
+
+            // --- Editable Player Name (click-to-edit) ---
+            function attachPlayerNameEditor() {
+                const editBtn = document.getElementById('playerName');
+                if (!editBtn) return;
+                editBtn.addEventListener('click', () => {
+                    playSound('click');
+                    const nameSpan = document.getElementById('playerNameDisplay');
+                    if (!nameSpan) return;
+                    const current = nameSpan.innerText.trim();
+                    const input = document.createElement('input');
+                    input.type = 'text';
+                    input.value = current;
+                    input.id = 'playerNameInput';
+                    input.className = 'profile-value';
+                    input.style.width = '160px';
+                    input.style.marginLeft = '0.25rem';
+                    input.style.color = 'var(--color-primary)';
+                    nameSpan.replaceWith(input);
+                    input.focus();
+                    input.select();
+
+                    function finalize(save) {
+                        const value = save ? (input.value.trim() || current) : current;
+                        const newSpan = document.createElement('span');
+                        newSpan.className = 'profile-value';
+                        newSpan.id = 'playerNameDisplay';
+                        newSpan.innerText = value;
+                        input.replaceWith(newSpan);
+                        playSound(save ? 'click' : 'alert');
+                        if (save) writeToConsole(`Player name changed to ${value}.`);
+                    }
+
+                    input.addEventListener('blur', () => finalize(true));
+                    input.addEventListener('keydown', (e) => {
+                        if (e.key === 'Enter') finalize(true);
+                        if (e.key === 'Escape') finalize(false);
+                    });
+                });
+            }
+            attachPlayerNameEditor();
         });
 
 

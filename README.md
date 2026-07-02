@@ -42,3 +42,8 @@
 
 # HTTP SuudTraaaa
 
+
+## คำสั่งสร้าแอป chopee
+- uv run manage.py startapp chopee
+- uv run manage.py migrate
+- uv run manage.py runserver
