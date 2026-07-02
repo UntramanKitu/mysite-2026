@@ -1,35 +1,16 @@
-from django.shortcuts import render, get_object_or_404, redirect
-from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.models import User
-from django.http import JsonResponse
-from django.views.decorators.http import require_POST
 from django.db.models import Q
 from django.core.files.base import ContentFile
 from django.utils.text import slugify
 from decimal import Decimal
-import uuid
 
-from .models import (
-    Product, Shop, Category, Cart, CartItem, 
-    Order, OrderItem, Review, UserProfile
-)
+from .models import Product, Category
 
 def seed_mock_products():
     """สร้างข้อมูลตัวอย่าง 5 สินค้าเพื่อให้หน้าแสดงผลเหมือน Shopeeทันที"""
     if Product.objects.exists():
         return
-
-    seller, _ = User.objects.get_or_create(
-        username='mock-seller',
-        defaults={'is_active': True, 'is_staff': True}
-    )
-    shop, _ = Shop.objects.get_or_create(
-        owner=seller,
-        defaults={
-            'shop_name': 'Mock Shop',
-            'description': 'ร้านค้าตัวอย่างสำหรับแสดงผลสินค้า',
-        },
-    )
 
     categories_data = [
         ('Điện tử', 'electronics', 'สินค้ากลุ่มอุปกรณ์และเทคโนโลยี'),
@@ -83,17 +64,15 @@ def seed_mock_products():
 
     for item in products_data:
         Product.objects.create(
-            shop=shop,
             category=item['category'],
             name=item['name'],
-            slug=item['slug'],
             description=item['description'],
             price=item['price'],
-            discount_percentage=item['discount_percentage'],
-            stock=item['stock'],
-            image=make_svg(item['name'], item['bg'], item['text']),
+            original_price=item['price'] * Decimal('1.2'),
+            image=make_svg(item['name'], item['bg'], item['text']).name,
             rating=item['rating'],
             sold_count=item['sold_count'],
+            stock=item['stock'],
         )
 
 
@@ -117,8 +96,13 @@ def products_list(request):
         products = products.filter(category_id=category_id)
     
     # เรียงลำดับ
-    sort = request.GET.get('sort', '-created_at')
-    products = products.order_by(sort)
+    sort = request.GET.get('sort', '-id')
+    if sort in {'-created_at', 'created_at'}:
+        sort = '-id'
+    if sort in {'price', '-price', '-sold_count'}:
+        products = products.order_by(sort)
+    else:
+        products = products.order_by(sort)
     
     context = {
         'products': products,
@@ -127,202 +111,13 @@ def products_list(request):
     }
     return render(request, 'chopee/products.html', context)
 
-def product_detail(request, slug):
+def product_detail(request, pk):
     """แสดงรายละเอียดสินค้า"""
-    product = get_object_or_404(Product, slug=slug)
-    product.view_count += 1
-    product.save()
-    
-    reviews = product.reviews.all()
-    similar_products = Product.objects.filter(
-        category=product.category
-    ).exclude(id=product.id)[:5]
-    
-    context = {
-        'product': product,
-        'reviews': reviews,
-        'similar_products': similar_products,
-    }
+    product = get_object_or_404(Product, pk=pk)
+    context = {'product': product}
     return render(request, 'chopee/product_detail.html', context)
 
-def shop_detail(request, shop_id):
-    """แสดงรายละเอียดของร้านค้า"""
-    shop = get_object_or_404(Shop, id=shop_id)
-    products = shop.products.all()
-    
-    # ค้นหาสินค้าในร้าน
-    search_query = request.GET.get('q', '')
-    if search_query:
-        products = products.filter(name__icontains=search_query)
-    
-    context = {
-        'shop': shop,
-        'products': products,
-        'search_query': search_query,
-    }
-    return render(request, 'chopee/shop_detail.html', context)
-
-@login_required
-def cart_view(request):
-    """แสดงตะกร้าสินค้า"""
-    cart, created = Cart.objects.get_or_create(user=request.user)
-    context = {'cart': cart}
-    return render(request, 'chopee/cart.html', context)
-
-@login_required
-@require_POST
-def add_to_cart(request, product_id):
-    """เพิ่มสินค้าลงในตะกร้า"""
-    product = get_object_or_404(Product, id=product_id)
-    cart, created = Cart.objects.get_or_create(user=request.user)
-    
-    quantity = int(request.POST.get('quantity', 1))
-    
-    cart_item, created = CartItem.objects.get_or_create(
-        cart=cart,
-        product=product,
-        defaults={'quantity': quantity}
-    )
-    
-    if not created:
-        cart_item.quantity += quantity
-        cart_item.save()
-    
-    return redirect('chopee:cart')
-
-@login_required
-@require_POST
-def update_cart_item(request, item_id):
-    """อัปเดตจำนวนสินค้าในตะกร้า"""
-    cart_item = get_object_or_404(CartItem, id=item_id, cart__user=request.user)
-    quantity = int(request.POST.get('quantity', 1))
-    
-    if quantity > 0:
-        cart_item.quantity = quantity
-        cart_item.save()
-    else:
-        cart_item.delete()
-    
-    return redirect('chopee:cart')
-
-@login_required
-@require_POST
-def remove_from_cart(request, item_id):
-    """ลบสินค้าออกจากตะกร้า"""
-    cart_item = get_object_or_404(CartItem, id=item_id, cart__user=request.user)
-    cart_item.delete()
-    return redirect('chopee:cart')
-
-@login_required
-def checkout(request):
-    """ชำระเงิน"""
-    cart = get_object_or_404(Cart, user=request.user)
-    
-    if request.method == 'POST':
-        shipping_address = request.POST.get('shipping_address', '')
-        phone_number = request.POST.get('phone_number', '')
-        
-        if not shipping_address or not phone_number:
-            context = {'cart': cart, 'error': 'กรุณากรอกที่อยู่และเบอร์โทรศัพท์'}
-            return render(request, 'chopee/checkout.html', context)
-        
-        # สร้างคำสั่งซื้อ
-        order_number = f"ORD-{uuid.uuid4().hex[:8].upper()}"
-        total_price = cart.total_price
-        
-        order = Order.objects.create(
-            user=request.user,
-            order_number=order_number,
-            total_price=total_price,
-            shipping_address=shipping_address,
-            phone_number=phone_number,
-            status='pending'
-        )
-        
-        # สร้าง OrderItem
-        for item in cart.items.all():
-            OrderItem.objects.create(
-                order=order,
-                product=item.product,
-                quantity=item.quantity,
-                price=item.product.discounted_price
-            )
-            
-            # อัปเดต sold_count
-            item.product.sold_count += item.quantity
-            item.product.save()
-        
-        # ล้างตะกร้า
-        cart.items.all().delete()
-        
-        return redirect('chopee:order_detail', order_id=order.id)
-    
-    context = {'cart': cart}
-    return render(request, 'chopee/checkout.html', context)
-
-@login_required
-def orders_list(request):
-    """แสดงรายการคำสั่งซื้อของผู้ใช้"""
-    orders = request.user.orders.all()
-    context = {'orders': orders}
-    return render(request, 'chopee/orders.html', context)
-
-@login_required
-def order_detail(request, order_id):
-    """แสดงรายละเอียดคำสั่งซื้อ"""
-    order = get_object_or_404(Order, id=order_id, user=request.user)
-    context = {'order': order}
-    return render(request, 'chopee/order_detail.html', context)
-
-@login_required
-def add_review(request, product_id):
-    """เพิ่มรีวิวสินค้า"""
-    product = get_object_or_404(Product, id=product_id)
-    
-    if request.method == 'POST':
-        rating = int(request.POST.get('rating', 5))
-        comment = request.POST.get('comment', '')
-        
-        review, created = Review.objects.update_or_create(
-            product=product,
-            user=request.user,
-            defaults={
-                'rating': rating,
-                'comment': comment,
-            }
-        )
-        
-        return redirect('chopee:product_detail', slug=product.slug)
-    
-    try:
-        review = Review.objects.get(product=product, user=request.user)
-    except Review.DoesNotExist:
-        review = None
-    
-    context = {
-        'product': product,
-        'review': review,
-    }
-    return render(request, 'chopee/add_review.html', context)
-
-@login_required
-def user_profile(request):
-    """แสดงและแก้ไขโปรไฟล์ผู้ใช้"""
-    profile, created = UserProfile.objects.get_or_create(user=request.user)
-    
-    if request.method == 'POST':
-        profile.phone_number = request.POST.get('phone_number', '')
-        profile.address = request.POST.get('address', '')
-        profile.city = request.POST.get('city', '')
-        profile.postal_code = request.POST.get('postal_code', '')
-        profile.save()
-        return redirect('chopee:user_profile')
-    
-    context = {'profile': profile}
-    return render(request, 'chopee/profile.html', context)
 
 def shops_list(request):
     """แสดงรายการร้านค้า"""
-    shops = Shop.objects.all()
-    context = {'shops': shops}
-    return render(request, 'chopee/shops.html', context)
+    return render(request, 'chopee/shops.html', {'shops': []})
