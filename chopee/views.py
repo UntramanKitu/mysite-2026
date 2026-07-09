@@ -1,11 +1,20 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.db.models import Q
 from django.core.files.base import ContentFile
 from django.utils.text import slugify
 from decimal import Decimal
 
-from .models import Product, Category
+from .models import Product, Category, UserProfile, Cart, CartItem, Order, Shop
+
+
+def ensure_user_cart(user):
+    if not user.is_authenticated:
+        return None
+    cart, _ = Cart.objects.get_or_create(user=user)
+    return cart
+
 
 def seed_mock_products():
     """สร้างข้อมูลตัวอย่าง 5 สินค้าเพื่อให้หน้าแสดงผลเหมือน Shopeeทันที"""
@@ -24,6 +33,15 @@ def seed_mock_products():
             defaults={'slug': slug, 'description': description},
         )
         categories[name] = category
+
+    seller_user, _ = User.objects.get_or_create(username='demo-seller')
+    shop, _ = Shop.objects.get_or_create(
+        owner=seller_user,
+        defaults={
+            'shop_name': 'Chopee Demo Shop',
+            'description': 'ร้านค้าตัวอย่างสำหรับแสดงผล',
+        },
+    )
 
     def make_svg(name, bg, text):
         svg = f'''<svg xmlns="http://www.w3.org/2000/svg" width="800" height="800" viewBox="0 0 800 800">
@@ -64,46 +82,43 @@ def seed_mock_products():
 
     for item in products_data:
         Product.objects.create(
+            shop=shop,
             category=item['category'],
             name=item['name'],
+            slug=item['slug'],
             description=item['description'],
             price=item['price'],
-            original_price=item['price'] * Decimal('1.2'),
-            image=make_svg(item['name'], item['bg'], item['text']).name,
+            discount_percentage=item['discount_percentage'],
+            stock=item['stock'],
+            image=make_svg(item['name'], item['bg'], item['text']),
             rating=item['rating'],
             sold_count=item['sold_count'],
-            stock=item['stock'],
         )
 
 
 def products_list(request):
     """แสดงรายการสินค้า"""
     seed_mock_products()
+    if request.user.is_authenticated:
+        ensure_user_cart(request.user)
+
     products = Product.objects.all()
     categories = Category.objects.all()
-    
-    # ค้นหา
+
     search_query = request.GET.get('q', '')
     if search_query:
         products = products.filter(
-            Q(name__icontains=search_query) | 
+            Q(name__icontains=search_query) |
             Q(description__icontains=search_query)
         )
-    
-    # ตัวกรองตามหมวดหมู่
+
     category_id = request.GET.get('category', '')
     if category_id:
         products = products.filter(category_id=category_id)
-    
-    # เรียงลำดับ
+
     sort = request.GET.get('sort', '-id')
-    if sort in {'-created_at', 'created_at'}:
-        sort = '-id'
-    if sort in {'price', '-price', '-sold_count'}:
-        products = products.order_by(sort)
-    else:
-        products = products.order_by(sort)
-    
+    products = products.order_by(sort)
+
     context = {
         'products': products,
         'categories': categories,
@@ -111,13 +126,98 @@ def products_list(request):
     }
     return render(request, 'chopee/products.html', context)
 
-def product_detail(request, pk):
+
+def product_detail(request, slug):
     """แสดงรายละเอียดสินค้า"""
-    product = get_object_or_404(Product, pk=pk)
+    if request.user.is_authenticated:
+        ensure_user_cart(request.user)
+
+    product = get_object_or_404(Product, slug=slug)
     context = {'product': product}
     return render(request, 'chopee/product_detail.html', context)
 
 
+@login_required
+def user_profile(request):
+    """แสดงหน้าโปรไฟล์ผู้ใช้"""
+    profile, _ = UserProfile.objects.get_or_create(user=request.user)
+    ensure_user_cart(request.user)
+    return render(request, 'chopee/profile.html', {'profile': profile})
+
+
+@login_required
+def cart(request):
+    """แสดงหน้าเพจตะกร้า"""
+    cart_obj = ensure_user_cart(request.user)
+    return render(request, 'chopee/cart.html', {'cart': cart_obj})
+
+
+@login_required
+def add_to_cart(request, pk):
+    """เพิ่มสินค้าเข้าในตะกร้า"""
+    product = get_object_or_404(Product, pk=pk)
+    cart_obj = ensure_user_cart(request.user)
+    item, created = CartItem.objects.get_or_create(cart=cart_obj, product=product, defaults={'quantity': 1})
+    if not created:
+        item.quantity += 1
+        item.save()
+    return redirect('chopee:cart')
+
+
+@login_required
+def update_cart_item(request, item_id):
+    """อัปเดตจำนวนสินค้าในตะกร้า"""
+    cart_obj = ensure_user_cart(request.user)
+    item = get_object_or_404(CartItem, pk=item_id, cart=cart_obj)
+    quantity = request.POST.get('quantity', 1)
+    item.quantity = max(1, int(quantity))
+    item.save()
+    return redirect('chopee:cart')
+
+
+@login_required
+def remove_from_cart(request, item_id):
+    """ลบสินค้าออกจากตะกร้า"""
+    cart_obj = ensure_user_cart(request.user)
+    CartItem.objects.filter(pk=item_id, cart=cart_obj).delete()
+    return redirect('chopee:cart')
+
+
+@login_required
+def checkout(request):
+    """หน้าชำระเงินตัวอย่าง"""
+    cart_obj = ensure_user_cart(request.user)
+    return render(request, 'chopee/checkout.html', {'cart': cart_obj})
+
+
+@login_required
+def orders_list(request):
+    """แสดงรายการคำสั่งซื้อ"""
+    orders = Order.objects.filter(user=request.user)
+    return render(request, 'chopee/orders.html', {'orders': orders})
+
+
+@login_required
+def order_detail(request, pk):
+    """แสดงรายละเอียดคำสั่งซื้อ"""
+    order = get_object_or_404(Order, pk=pk, user=request.user)
+    return render(request, 'chopee/order_detail.html', {'order': order})
+
+
+def shop_detail(request, pk):
+    """แสดงรายละเอียดร้านค้า"""
+    if request.user.is_authenticated:
+        ensure_user_cart(request.user)
+
+    shop = get_object_or_404(Shop, pk=pk)
+    products = Product.objects.filter(shop=shop)
+    return render(request, 'chopee/shop_detail.html', {'shop': shop, 'products': products})
+
+
 def shops_list(request):
     """แสดงรายการร้านค้า"""
-    return render(request, 'chopee/shops.html', {'shops': []})
+    if request.user.is_authenticated:
+        ensure_user_cart(request.user)
+
+    shops = Shop.objects.all()
+    return render(request, 'chopee/shops.html', {'shops': shops})

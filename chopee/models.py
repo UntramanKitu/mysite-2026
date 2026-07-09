@@ -1,3 +1,4 @@
+from decimal import Decimal
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator, MaxValueValidator
@@ -58,7 +59,8 @@ class Product(models.Model):
     
     @property
     def discounted_price(self):
-        return self.price * (1 - self.discount_percentage / 100)
+        discount_factor = Decimal('1') - (Decimal(self.discount_percentage) / Decimal('100'))
+        return self.price * discount_factor
 
 class ProductImage(models.Model):
     """รูปภาพสินค้าเพิ่มเติม"""
